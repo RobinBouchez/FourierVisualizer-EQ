@@ -208,27 +208,6 @@ void MainComponent::paint (juce::Graphics& g)
     
     g.setColour (juce::Colours::white);
     
-//    float Xr[waveBufferSize];
-//    float Xi[waveBufferSize];
-//    
-//    for (int k = 0; k < waveBufferSize; k++) {
-//        Xr[k]=0;
-//        Xi[k]=0;
-//        for (int n = 0; n < waveBufferSize; n++) {
-//            Xr[k] = (Xr[k] + *waveBufferPoints[n] * cos(2 * M_PI * k * n / waveBufferSize));
-//            Xi[k] = (Xi[k] - *waveBufferPoints[n] * sin(2 * M_PI * k * n / waveBufferSize));
-//        }
-//    }
-//    // DFT calculation
-//    std::complex<float> DFTout[sampleBufferSize];
-//    auto M_I_2PI_DL = -(M_2_PI / sampleBufferSize);
-//    for (int k = 0; k < sampleBufferSize; ++k) {
-//        DFTout[k] = 0;
-//        for (int n = 0; n < sampleBufferSize; ++n) {
-//            DFTout[k] += *sampleBuffer[n] * std::exp(M_I_2PI_DL * k * n);
-//        }
-//    }
-//    
     
     // Example signal of size 512 (can be filled with actual data)
     std::vector<std::complex<double>> signal(sampleBufferSize);
@@ -239,14 +218,6 @@ void MainComponent::paint (juce::Graphics& g)
     // Perform FFT
     fft(signal);
 
-//    // Output the FFT result
-//    for (int i = 0; i < 512; ++i) {
-//        double magnitude = std::abs(signal[i]);
-//        double phase = std::arg(signal[i]);
-//        std::cout << "Frequency bin " << i << ": Magnitude = " << magnitude
-//                  << ", Phase = " << phase << " radians\n";
-//    }
-//    
     for (int i = 0; i < sampleBufferSize / 2; ++i) {
         double magnitude = std::abs(signal[i]);
         float frequency = i * sampleRateVar/sampleBufferSize;
@@ -261,67 +232,6 @@ void MainComponent::paint (juce::Graphics& g)
         // Draw the point
         g.fillEllipse(xPos, yPos, 1, 1);
     }
-    
-//
-////    juce::dsp::FFT fftObj(9);
-////    const int fftSize = 1 << 9;
-////    std::complex<float> fftData[fftSize];
-////    std::copy(sampleBuffer, sampleBuffer + fftSize, fftData);
-////    fftObj.perform(fftData, fftData, 1);
-////
-//    std::vector<std::complex<float>> dft(sampleBufferSize);
-//
-//    for (int k = 0; k < sampleBufferSize; ++k) {
-//        for (int n = 0; n < sampleBufferSize; ++n) {
-//            dft[k] += *sampleBuffer[n] * std::exp(std::complex<float>(0, -2 * M_PI * n * k / sampleBufferSize));
-//        }
-//    }
-//
-//    float sampleRate = sampleRateVar;  // Replace with your actual sample rate
-//    float maxFreq = sampleRate / 2.0f;  // Nyquist frequency
-//    float freqResolution = maxFreq / (fftSize / 2);  // Frequency step size
-//
-//    // Find maximum magnitude for normalization
-//    float maxMagnitude = 0.0f;
-//    for (int i = 0; i < fftSize / 2; ++i) {
-//        float magnitude = std::abs(DFTout[i]);
-//        maxMagnitude = std::max(maxMagnitude, magnitude);
-//    }
-//
-//    // Only plot up to Nyquist frequency (half the buffer size)
-//    for (int i = 0; i < fftSize / 2; ++i) {
-//        float frequency = i * freqResolution;  // Convert index to frequency
-//        
-//        // Scale frequency logarithmically for better visualization of lower frequencies
-//        float logFreq = std::log10(frequency + 1);  // Add 1 to avoid log(0)
-//        float logMaxFreq = std::log10(maxFreq + 1);
-//        float xPos = spectraBounds.getX() + (logFreq / logMaxFreq) * 1400;
-//        
-//        // Normalize magnitude to fit in the spectraBounds height
-//        float magnitude = std::abs(dft[i]);
-//        float normalizedMagnitude = magnitude / maxMagnitude;
-//        float yPos = spectraBounds.getBottom() - (normalizedMagnitude * spectraBounds.getHeight());
-//        
-//        // Draw the point
-//        g.fillEllipse(xPos - 1, yPos - 1, 2, 2);
-//
-//        
-//        // Optionally connect points with lines for a smoother appearance
-////        if (i > 0) {
-////            float prevFreq = (i - 1) * freqResolution;
-////            float prevLogFreq = std::log10(prevFreq + 1);
-////            float prevXPos = spectraBounds.getX() + (prevLogFreq / logMaxFreq) * spectraBounds.getWidth();
-////            
-////            float prevMagnitude = std::abs(DFTout[i - 1]);
-////            float prevNormalizedMagnitude = prevMagnitude / maxMagnitude;
-////            float prevYPos = spectraBounds.getBottom() - (prevNormalizedMagnitude * spectraBounds.getHeight());
-////            
-////            g.drawLine(prevXPos, prevYPos, xPos, yPos);
-////        }
-//    }
-////    for (auto sample = 0; sample < sampleBufferSize; ++sample) {
-////        g.drawEllipse(spectraBounds.getX() + (2 * M_PI * (sample / sampleRate)) * sampleBufferSize * 10 * (getWidth() / sampleBufferSize), (frequencyDomain[sample].imag() * 1) + 200, 2, 2, 1.f);
-////    }
 }
 
 void MainComponent::resized()
@@ -483,15 +393,14 @@ void MainComponent::paintIfFileLoaded (juce::Graphics& g, const juce::Rectangle<
 
     g.setColour (juce::Colours::white);
 
-    auto audioLength = (float) thumbnail.getTotalLength();                               // [12]
+    auto audioLength = (float) thumbnail.getTotalLength();
     thumbnail.drawChannels (g, thumbnailBounds, 0.0, audioLength, 1.0f);
 
     g.setColour (juce::Colours::red);
 
     auto audioPosition = (float) transportSource.getCurrentPosition();
     auto drawPosition = (audioPosition / audioLength) * (float) thumbnailBounds.getWidth()
-                        + (float) thumbnailBounds.getX();                                // [13]
+                        + (float) thumbnailBounds.getX();
     g.drawLine (drawPosition, (float) thumbnailBounds.getY(), drawPosition,
-                (float) thumbnailBounds.getBottom(), 2.0f);                              // [14]
+                (float) thumbnailBounds.getBottom(), 2.0f);
 }
-
