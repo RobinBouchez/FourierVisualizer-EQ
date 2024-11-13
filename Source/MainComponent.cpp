@@ -1,5 +1,39 @@
 #include "MainComponent.h"
 
+int sampleBufferSize = 0;
+
+const float* sampleBuffer[512];
+
+#include <cmath>
+#include <complex>
+#include <vector>
+
+// Function to perform in-place Cooley-Tukey FFT
+void fft(std::vector<std::complex<double>>& a) {
+    int n = a.size();
+    if (n <= 1) return;
+
+    // Split even and odd elements
+    std::vector<std::complex<double>> even(n / 2);
+    std::vector<std::complex<double>> odd(n / 2);
+    for (int i = 0; i < n / 2; ++i) {
+        even[i] = a[i * 2];
+        odd[i] = a[i * 2 + 1];
+    }
+
+    // Recursively perform FFT on both halves
+    fft(even);
+    fft(odd);
+
+    // Combine
+    for (int k = 0; k < n / 2; ++k) {
+        std::complex<double> t = std::polar(1.0, -2 * M_PI * k / n) * odd[k];
+        a[k] = even[k] + t;
+        a[k + n / 2] = even[k] - t;
+    }
+}
+
+
 //==============================================================================
 MainComponent::MainComponent()
 : state(Stopped), openButton("Open"), playButton("Play"), stopButton("Stop"),
@@ -8,7 +42,7 @@ thumbnailCache (5),                            // [4]
 {
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize (1600, 800);
+    setSize (1600, 900);
 
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
@@ -40,9 +74,78 @@ thumbnailCache (5),                            // [4]
     stopButton.setColour (juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setEnabled (false);
     
+    addAndMakeVisible (frequencySlider1);
+    frequencySlider1.setRange (0, 100.0);
+    frequencySlider1.setTextValueSuffix (" Hz");
+    frequencySlider1.setSliderStyle(juce::Slider::Rotary);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+     
+    addAndMakeVisible(frequencyLabel1);
+    frequencyLabel1.setText ("Frequency", juce::dontSendNotification);
+    frequencyLabel1.attachToComponent (&frequencySlider1, true);
+    frequencySlider1.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider1.getTextBoxHeight());
+    
+    addAndMakeVisible (filterSlider1);
+    filterSlider1.setRange (-12.0, 24.0);
+    filterSlider1.setTextValueSuffix (" Db");
+    filterSlider1.setSliderStyle(juce::Slider::LinearBarVertical);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+     
+    addAndMakeVisible(filterLabel1);
+    filterLabel1.setText ("Filter", juce::dontSendNotification);
+    filterLabel1.attachToComponent (&filterSlider1, true);
+    filterSlider1.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider1.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider2);
+    frequencySlider2.setRange (50, 500.0);
+    frequencySlider2.setTextValueSuffix (" Hz");
+    frequencySlider2.setSliderStyle(juce::Slider::Rotary);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+    
+    addAndMakeVisible(frequencyLabel2);
+    frequencyLabel2.setText ("Frequency", juce::dontSendNotification);
+    frequencyLabel2.attachToComponent (&frequencySlider2, true);
+    frequencySlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider2.getTextBoxHeight());
+    
+    addAndMakeVisible (filterSlider2);
+    filterSlider2.setRange (-12.0, 24.0);
+    filterSlider2.setTextValueSuffix (" Db");
+    filterSlider2.setSliderStyle(juce::Slider::LinearBarVertical);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+     
+    addAndMakeVisible(filterLabel2);
+    filterLabel2.setText ("Filter", juce::dontSendNotification);
+    filterLabel2.attachToComponent (&filterSlider2, true);
+    filterSlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider2.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider3);
+    frequencySlider3.setRange (50, 500.0);
+    frequencySlider3.setTextValueSuffix (" Hz");
+    frequencySlider3.setSliderStyle(juce::Slider::Rotary);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+     
+    addAndMakeVisible(frequencyLabel3);
+    frequencyLabel3.setText ("Frequency", juce::dontSendNotification);
+    frequencyLabel3.attachToComponent (&frequencySlider3, true);
+    frequencySlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider3.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider4);
+    frequencySlider4.setRange (50, 500.0);
+    frequencySlider4.setTextValueSuffix (" Hz");
+    frequencySlider4.setSliderStyle(juce::Slider::Rotary);
+//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+     
+    addAndMakeVisible(frequencyLabel4);
+    frequencyLabel4.setText ("Frequency", juce::dontSendNotification);
+    frequencyLabel4.attachToComponent (&frequencySlider4, true);
+    frequencySlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider4.getTextBoxHeight());
+    
+    
     formatManager.registerBasicFormats();
     transportSource.addChangeListener (this);
     thumbnail.addChangeListener (this);
+    
+    
     
     startTimer (40);
 }
@@ -57,6 +160,7 @@ MainComponent::~MainComponent()
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    sampleRateVar = sampleRate;
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -66,15 +170,21 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         bufferToFill.clearActiveBufferRegion();
         return;
     }
+    
+    sampleBufferSize = bufferToFill.numSamples;
+    auto* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+
+    for (auto sample = 0; sample < sampleBufferSize; ++sample) {
+        sampleBuffer[sample] = &channelData[sample];
+    }
+
+    
     transportSource.getNextAudioBlock (bufferToFill);
 }
 
 void MainComponent::releaseResources()
 {
-    // This will be called when the audio device stops, or when it is being
-    // restarted due to a setting change.
-
-    // For more details, see the help for AudioProcessor::releaseResources()
+    
 }
 
 //==============================================================================
@@ -83,40 +193,158 @@ void MainComponent::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colours::black);
     
-    juce::Rectangle<int> thumbnailBounds (20, 550, getWidth() - 40, 180);
+    juce::Rectangle<int> thumbnailBounds (windowBorder_x, getHeight() - thumbnailHeight - buttonHeight - offset - windowBorder_y, getWidth() - (2 * windowBorder_x), thumbnailHeight);
      
             if (thumbnail.getNumChannels() == 0)
                 paintIfNoFileLoaded (g, thumbnailBounds);
             else
                 paintIfFileLoaded (g, thumbnailBounds);
     
-    juce::Rectangle<int> spectraBounds (20, 20, getWidth() - 40, 300);
+    juce::Rectangle<int> spectraBounds (windowBorder_x, windowBorder_y, getWidth() - 40, 300);
     
     g.setColour (juce::Colours::grey);
     g.drawLine(spectraBounds.getX(), spectraBounds.getY() + spectraBounds.getHeight(), spectraBounds.getX() + spectraBounds.getWidth(), spectraBounds.getY() + spectraBounds.getHeight(), 1);
     
     
-//    juce::Slider s;
-//    
-//    
-//    getLookAndFeel().drawLinearSlider(g,
-//    20, 60,
-//                                     200,200,
-//                                     .5f, 0.0f, 1.0f,
-//                                      juce::Slider::SliderStyle::LinearVertical,
-//                                     s);
+    g.setColour (juce::Colours::white);
     
+//    float Xr[waveBufferSize];
+//    float Xi[waveBufferSize];
+//    
+//    for (int k = 0; k < waveBufferSize; k++) {
+//        Xr[k]=0;
+//        Xi[k]=0;
+//        for (int n = 0; n < waveBufferSize; n++) {
+//            Xr[k] = (Xr[k] + *waveBufferPoints[n] * cos(2 * M_PI * k * n / waveBufferSize));
+//            Xi[k] = (Xi[k] - *waveBufferPoints[n] * sin(2 * M_PI * k * n / waveBufferSize));
+//        }
+//    }
+//    // DFT calculation
+//    std::complex<float> DFTout[sampleBufferSize];
+//    auto M_I_2PI_DL = -(M_2_PI / sampleBufferSize);
+//    for (int k = 0; k < sampleBufferSize; ++k) {
+//        DFTout[k] = 0;
+//        for (int n = 0; n < sampleBufferSize; ++n) {
+//            DFTout[k] += *sampleBuffer[n] * std::exp(M_I_2PI_DL * k * n);
+//        }
+//    }
+//    
     
+    // Example signal of size 512 (can be filled with actual data)
+    std::vector<std::complex<double>> signal(sampleBufferSize);
+    for (int i = 0; i < sampleBufferSize; ++i) {
+        signal[i] = std::complex<double>(*sampleBuffer[i], 0);  // Example: Sine wave
+    }
+
+    // Perform FFT
+    fft(signal);
+
+//    // Output the FFT result
+//    for (int i = 0; i < 512; ++i) {
+//        double magnitude = std::abs(signal[i]);
+//        double phase = std::arg(signal[i]);
+//        std::cout << "Frequency bin " << i << ": Magnitude = " << magnitude
+//                  << ", Phase = " << phase << " radians\n";
+//    }
+//    
+    for (int i = 0; i < sampleBufferSize / 2; ++i) {
+        double magnitude = std::abs(signal[i]);
+        float frequency = i * sampleRateVar/sampleBufferSize;
+        
+        // Scale frequency logarithmically for better visualization of lower frequencies
+        float maxFreq = sampleRateVar / 2.0f;
+        float logFreq = std::log10(frequency + 1);  // Add 1 to avoid log(0)
+        float logMaxFreq = std::log10(maxFreq + 1);
+        float xPos = spectraBounds.getX() + (logFreq / logMaxFreq) * 1500;
+        
+        float yPos = spectraBounds.getBottom() - (magnitude * 2);
+        // Draw the point
+        g.fillEllipse(xPos, yPos, 1, 1);
+    }
+    
+//
+////    juce::dsp::FFT fftObj(9);
+////    const int fftSize = 1 << 9;
+////    std::complex<float> fftData[fftSize];
+////    std::copy(sampleBuffer, sampleBuffer + fftSize, fftData);
+////    fftObj.perform(fftData, fftData, 1);
+////
+//    std::vector<std::complex<float>> dft(sampleBufferSize);
+//
+//    for (int k = 0; k < sampleBufferSize; ++k) {
+//        for (int n = 0; n < sampleBufferSize; ++n) {
+//            dft[k] += *sampleBuffer[n] * std::exp(std::complex<float>(0, -2 * M_PI * n * k / sampleBufferSize));
+//        }
+//    }
+//
+//    float sampleRate = sampleRateVar;  // Replace with your actual sample rate
+//    float maxFreq = sampleRate / 2.0f;  // Nyquist frequency
+//    float freqResolution = maxFreq / (fftSize / 2);  // Frequency step size
+//
+//    // Find maximum magnitude for normalization
+//    float maxMagnitude = 0.0f;
+//    for (int i = 0; i < fftSize / 2; ++i) {
+//        float magnitude = std::abs(DFTout[i]);
+//        maxMagnitude = std::max(maxMagnitude, magnitude);
+//    }
+//
+//    // Only plot up to Nyquist frequency (half the buffer size)
+//    for (int i = 0; i < fftSize / 2; ++i) {
+//        float frequency = i * freqResolution;  // Convert index to frequency
+//        
+//        // Scale frequency logarithmically for better visualization of lower frequencies
+//        float logFreq = std::log10(frequency + 1);  // Add 1 to avoid log(0)
+//        float logMaxFreq = std::log10(maxFreq + 1);
+//        float xPos = spectraBounds.getX() + (logFreq / logMaxFreq) * 1400;
+//        
+//        // Normalize magnitude to fit in the spectraBounds height
+//        float magnitude = std::abs(dft[i]);
+//        float normalizedMagnitude = magnitude / maxMagnitude;
+//        float yPos = spectraBounds.getBottom() - (normalizedMagnitude * spectraBounds.getHeight());
+//        
+//        // Draw the point
+//        g.fillEllipse(xPos - 1, yPos - 1, 2, 2);
+//
+//        
+//        // Optionally connect points with lines for a smoother appearance
+////        if (i > 0) {
+////            float prevFreq = (i - 1) * freqResolution;
+////            float prevLogFreq = std::log10(prevFreq + 1);
+////            float prevXPos = spectraBounds.getX() + (prevLogFreq / logMaxFreq) * spectraBounds.getWidth();
+////            
+////            float prevMagnitude = std::abs(DFTout[i - 1]);
+////            float prevNormalizedMagnitude = prevMagnitude / maxMagnitude;
+////            float prevYPos = spectraBounds.getBottom() - (prevNormalizedMagnitude * spectraBounds.getHeight());
+////            
+////            g.drawLine(prevXPos, prevYPos, xPos, yPos);
+////        }
+//    }
+////    for (auto sample = 0; sample < sampleBufferSize; ++sample) {
+////        g.drawEllipse(spectraBounds.getX() + (2 * M_PI * (sample / sampleRate)) * sampleBufferSize * 10 * (getWidth() / sampleBufferSize), (frequencyDomain[sample].imag() * 1) + 200, 2, 2, 1.f);
+////    }
 }
 
 void MainComponent::resized()
 {
-    int borderOffset = 20;
-    int width = 100;
-    int height = 25;
-    openButton.setBounds(borderOffset,getHeight() - height - borderOffset,width, height);
-    playButton.setBounds(getWidth() / 2 - width,getHeight() - height - borderOffset,width, height);
-    stopButton.setBounds(getWidth() / 2 + width / 2,getHeight() - height - borderOffset,width, height);
+    openButton.setBounds(windowBorder_x,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
+    playButton.setBounds(getWidth() / 2 - buttonWidth,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
+    stopButton.setBounds(getWidth() / 2 + buttonWidth / 2,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
+    
+    auto sliderLeft = windowBorder_x + labelOffset;
+    auto sliderOffset = frequencySliderWidth * 2;
+    auto sliderY = getHeight() - 340;
+    frequencySlider1.setBounds (sliderLeft, sliderY, frequencySliderWidth, frequencySliderHeight);
+    filterSlider1.setBounds (sliderLeft, sliderY - 220, filterSliderWidth, filterSliderHeight);
+    frequencySlider2.setBounds (sliderLeft + sliderOffset, sliderY, frequencySliderWidth, frequencySliderHeight);
+    filterSlider2.setBounds (sliderLeft + sliderOffset, sliderY - 220, filterSliderWidth, filterSliderHeight);
+    frequencySlider3.setBounds (sliderLeft + (sliderOffset * 2), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider4.setBounds (sliderLeft + (sliderOffset * 3), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider5.setBounds (sliderLeft + (sliderOffset * 4), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider6.setBounds (sliderLeft + (sliderOffset * 5), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider7.setBounds (sliderLeft + (sliderOffset * 6), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider8.setBounds (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider9.setBounds (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider10.setBounds (sliderLeft + (sliderOffset * 9), sliderY, frequencySliderWidth, frequencySliderHeight);
 }
 
 
@@ -124,10 +352,9 @@ void MainComponent::openButtonClicked()
   {
     chooser = std::make_unique<juce::FileChooser> ("Please select the file you want to load...",
                                                    juce::File::getSpecialLocation (juce::File::userDesktopDirectory),
-                                                "*.mp3");
+                                                "*.wav","*.mp3");
  
     
-    //juce::FileChooser c ("", )
     auto folderChooserFlags = juce::FileBrowserComponent::openMode |  juce::FileBrowserComponent::canSelectFiles;
  
     chooser->launchAsync (folderChooserFlags, [this] (const juce::FileChooser& chsr)
@@ -267,3 +494,4 @@ void MainComponent::paintIfFileLoaded (juce::Graphics& g, const juce::Rectangle<
     g.drawLine (drawPosition, (float) thumbnailBounds.getY(), drawPosition,
                 (float) thumbnailBounds.getBottom(), 2.0f);                              // [14]
 }
+
