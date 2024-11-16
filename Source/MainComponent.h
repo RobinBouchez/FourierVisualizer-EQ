@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "SpectrogramComponent.h"
+#include "audioSignal.h"
 
 class MainComponent  : public juce::AudioAppComponent, public juce::ChangeListener, private juce::Timer
 {
@@ -20,6 +20,7 @@ public:
     void paint (juce::Graphics& g) override;
     void resized() override;
     void timerCallback() override;
+    //void processBlock(juce::AudioBuffer< float > &buffer, juce::MidiBuffer &midiMessages) override;
 
 private:
     enum TransportState
@@ -84,24 +85,31 @@ private:
     juce::Label  frequencyLabel9;
     juce::Slider frequencySlider10;
     juce::Label  frequencyLabel10;
+    juce::AudioSourceChannelInfo channelInfo;
     
     float sampleRateVar;
     
     const float windowBorder_x = 20.f;
     const float windowBorder_y = 20.f;
     
-    const float frequencySliderWidth = 100;
-    const float frequencySliderHeight = 100;
-    const float filterSliderWidth = 100;
+    const float frequencySliderWidth = 80;
+    const float frequencySliderHeight = 80;
+    const float filterSliderWidth = 80;
     const float filterSliderHeight = 200;
     
     const float thumbnailWidth = 150;
-    const float thumbnailHeight = 150;
+    const float thumbnailHeight = 130;
     
     const float buttonWidth = 100;
     const float buttonHeight = 25;
     const float offset = 20;
     const float labelOffset = 100;
+    
+    const float minimumFrequency = 20;
+    const float maximumFrequency = 20000;
+    
+    
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
