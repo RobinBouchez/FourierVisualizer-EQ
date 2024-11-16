@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "audioSignal.h"
+#include "fourier.h"
 
 class MainComponent  : public juce::AudioAppComponent, public juce::ChangeListener, private juce::Timer
 {

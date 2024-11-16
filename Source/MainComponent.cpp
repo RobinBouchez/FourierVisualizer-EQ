@@ -128,7 +128,6 @@ MainComponent::MainComponent()
 : state(Stopped), openButton("Open"), playButton("Play"), stopButton("Stop"),
 thumbnailCache (5),                            // [4]
 thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
-, signal(std::vector<float>(0),0)
 {
     // Make sure you set the size of the component after
     // you add any child components.
@@ -290,19 +289,21 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     if(sampleArray[0] != NULL) {
         juce::dsp::FFT fftObj = juce::dsp::FFT(sqrt(BUFFERSIZE));
         std::vector<std::complex<float>> audioSignal(BUFFERSIZE);
-        std::vector<float> samples(BUFFERSIZE);
+        
         std::vector<std::complex<float>> FFTin(BUFFERSIZE);
         std::vector<std::complex<float>> FFTout(BUFFERSIZE);
         
         for (int i = 0; i < BUFFERSIZE; ++i) {
-            samples[i] = *sampleArray[i];
-            //audioSignal[i] = std::complex<double>(*sampleArray[i], 0);
+            //samples[i] = *sampleArray[i];
+            audioSignal[i] = std::complex<double>(*sampleArray[i], 0);
             FFTin[i] = std::complex<float>(*sampleArray[i], 0);
             
-            fftObj.perform(&FFTin[i], &FFTout[i], false);
+            //fftObj.perform(&FFTin[i], &FFTout[i], false);
         }
-        Signal signal = Signal(samples, bufferToFill.numSamples);
-        Fourier fourier = Fourier();
+        
+        for (int i = 0; i < BUFFERSIZE; ++i) {
+            //audioSignal[i] = std::complex<double>(*sampleArray[i], 0);
+        }
         
         // Perform FFT
         //fftSplit(audioSignal);
@@ -360,14 +361,23 @@ void MainComponent::paint (juce::Graphics& g)
         juce::Path filterPath1;
         float maxFreq = sampleRateVar / 2.0f;
         
+        std::vector<float> samples(BUFFERSIZE);
+        for (int i = 0; i < BUFFERSIZE; ++i) {
+            samples[i] = *sampleArray[i];
+        }
+        
+        Signal signal = Signal(samples, BUFFERSIZE);
+        Fourier fourier = Fourier(samples, sampleRateVar);
+        std::vector<Frequency*> frequencies = fourier.DFT();
+        
         for (int i = 0; i < BUFFERSIZE; ++i) {
             float frequency = i * sampleRateVar/BUFFERSIZE;
             
             // Scale frequency logarithmically for better visualization of lower frequencies
             //float logFreq = std::log10(frequency + 1);  // Add 1 to avoid log(0)
             //float logMaxFreq = std::log10(maxFreq + 1);
-            float xPos = spectraBounds.getX() + i;//(frequency / maxFreq) * (getWidth() - 2 * spectraBounds.getX());
-            float yPos = spectraBounds.getBottom() - magnitudes[i] * 300; //scaleValue(magnitudes[i], 0, 1, spectraBounds.getY(), spectraBounds.getY() - spectraBounds.getHeight());
+            float xPos = spectraBounds.getX() + frequencies[i]->getFrequency();//(frequency / maxFreq) * (getWidth() - 2 * spectraBounds.getX());
+            float yPos = spectraBounds.getBottom() - frequencies[i]->getAmplitude() * 100; //scaleValue(magnitudes[i], 0, 1, spectraBounds.getY(), spectraBounds.getY() - spectraBounds.getHeight());
 
             g.setColour (juce::Colours::white);
             g.drawLine(xPos, yPos, xPos, spectraBounds.getBottom());

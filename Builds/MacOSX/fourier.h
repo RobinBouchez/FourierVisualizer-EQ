@@ -1,5 +1,6 @@
 #pragma once
 #include "frequency.h"
+#include "iostream"
 #include <math.h>
 #include <vector>
 
