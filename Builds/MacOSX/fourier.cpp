@@ -59,46 +59,100 @@ struct Vector2 {
 Fourier::Fourier(std::vector<float> samples, int sampleRate)
 : samples(samples), sampleRate(sampleRate)
 {
-    
+    static std::vector<Frequency*> spectrum(samples.size());
 }
 
 
-std::vector<Frequency*> Fourier::DFT()
-{
-    int numFrequencies = samples.size() / 2 + 1; // Add one since we want to start at 0 Hz
-    std::vector<Frequency*> spectrum(numFrequencies);
-    
-    float frequencyStep = sampleRate / (float)samples.size(); // Equivalent to 1 / duration
-    
-    for(int i = 0; i < numFrequencies; ++i)
-    {
-        Vector2 sampleSum;
-        sampleSum.x = 0;
-        sampleSum.y = 0;
-        for (int i = 0; i < samples.size(); i++)
-        {
-            float angle = i / (float)(samples.size()) * TAU * i;
-            Vector2 testPoint;
-            testPoint.x = cos(angle);
-            testPoint.y = sin(angle);
-            sampleSum.x += testPoint.x * samples[i];
-            sampleSum.y += testPoint.y * samples[i];
-        }
-        
-        Vector2 sampleCentre;
-        sampleCentre.x = sampleSum.x / samples.size();
-        sampleCentre.y = sampleSum.y / samples.size();
-        
-        bool is0Hz = i == 0;
-        // The last frequency is equal to samplerate/2 only if sample count is even
-        bool isNyquistFreq = i == spectrum.size() - 1 && samples.size() % 2 == 0;
-        float amplitudeScale = is0Hz || isNyquistFreq ? 1 : 2;
-        float amplitude = sampleCentre.magnitude() * amplitudeScale;
-        
-        float frequency = i * frequencyStep;
-        float phase = -atan2(sampleCentre.y, sampleCentre.x);
-        spectrum[i] = new Frequency(frequency, amplitude, phase);
+
+void fft(std::vector<std::complex<double>> & a, bool invert) {
+    int n = a.size();
+    if (n == 1)
+        return;
+
+    std::vector<std::complex<double>> a0(n / 2), a1(n / 2);
+    for (int i = 0; 2 * i < n; i++) {
+        a0[i] = a[2*i];
+        a1[i] = a[2*i+1];
     }
-    
-    return spectrum;
+    fft(a0, invert);
+    fft(a1, invert);
+
+    double ang = 2 * M_PI / n * (invert ? -1 : 1);
+    std::complex<double> w(1), wn(cos(ang), sin(ang));
+    for (int i = 0; 2 * i < n; i++) {
+        a[i] = a0[i] + w * a1[i];
+        a[i + n/2] = a0[i] - w * a1[i];
+        if (invert) {
+            a[i] /= 2;
+            a[i + n/2] /= 2;
+        }
+        w *= wn;
+    }
 }
+
+
+void Fourier::DFT(std::vector<float>& samples) {
+    int n = samples.size();
+    if (n <= 1) return;
+    
+    // Split even and odd elements
+    std::vector<float> even(n / 2);
+    std::vector<float> odd(n / 2);
+    for (int i = 0; i < n / 2; ++i) {
+        even[i] = samples[i * 2];
+        odd[i] = samples[i * 2 + 1];
+    }
+
+    // Recursively perform FFT on both halves
+    DFT(even);
+    DFT(odd);
+    
+    std::vector<Frequency*> s(n);
+    // Combine
+    for (int k = 0; k < n / 2; ++k) {
+        std::complex<double> t = std::polar(1.0, -2 * M_PI * k / n).real() * odd[k];
+        s[k] = new Frequency(k * sampleRate / n, even[k] + t.real(), k);
+        s[k + n / 2] = new Frequency(k * sampleRate / n, even[k] - t.real(), k);
+    }
+    spectrum = s;
+}
+
+//std::vector<Frequency*> Fourier::DFT()
+//{
+//    int numFrequencies = samples.size() / 2 + 1; // Add one since we want to start at 0 Hz
+//    std::vector<Frequency*> spectrum(numFrequencies);
+//    
+//    float frequencyStep = sampleRate / (float)samples.size(); // Equivalent to 1 / duration
+//    
+//    for(int i = 0; i < numFrequencies; ++i)
+//    {
+//        Vector2 sampleSum;
+//        sampleSum.x = 0;
+//        sampleSum.y = 0;
+//        for (int i = 0; i < samples.size(); i++)
+//        {
+//            float angle = i / (float)(samples.size()) * TAU * i;
+//            Vector2 testPoint;
+//            testPoint.x = cos(angle);
+//            testPoint.y = sin(angle);
+//            sampleSum.x += testPoint.x * samples[i];
+//            sampleSum.y += testPoint.y * samples[i];
+//        }
+//        
+//        Vector2 sampleCentre;
+//        sampleCentre.x = sampleSum.x / samples.size();
+//        sampleCentre.y = sampleSum.y / samples.size();
+//        
+//        bool is0Hz = i == 0;
+//        // The last frequency is equal to samplerate/2 only if sample count is even
+//        bool isNyquistFreq = i == spectrum.size() - 1 && samples.size() % 2 == 0;
+//        float amplitudeScale = is0Hz || isNyquistFreq ? 1 : 2;
+//        float amplitude = sampleCentre.magnitude() * amplitudeScale;
+//        
+//        float frequency = i * frequencyStep;
+//        float phase = -atan2(sampleCentre.y, sampleCentre.x);
+//        spectrum[i] = new Frequency(frequency, amplitude, phase);
+//    }
+//    
+//    return spectrum;
+//}

@@ -13,3 +13,7 @@ float Frequency::getFrequency() const {
 float Frequency::getAmplitude() const {
     return amplitude;
 }
+
+void Frequency::setAmplitude(float a) {
+    amplitude = a;
+}

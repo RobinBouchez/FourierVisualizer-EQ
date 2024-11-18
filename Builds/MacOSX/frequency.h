@@ -6,6 +6,8 @@ public:
     float getFrequency() const;
     float getAmplitude() const;
     
+    void setAmplitude(float);
+    
 private:
     float frequency;
     float amplitude;

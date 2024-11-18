@@ -1,4 +1,8 @@
 #include "MainComponent.h"
+#include <fftw3.h>
+#include <complex.h>
+#include <stdio.h>
+
 
 #define BUFFERSIZE 4096
 
@@ -6,7 +10,93 @@ int sampleBufferSize = 0;
 
 float* sampleBuffer[BUFFERSIZE];
 float* sampleArray[BUFFERSIZE];
+
 double magnitudes[BUFFERSIZE];
+Signal* signalOfSamples;
+Fourier* fourier;
+
+
+class FFTProcessor {
+private:
+    int N; // Size of input
+    fftw_complex *in, *out;
+    fftw_plan forward_plan;
+    fftw_plan inverse_plan;
+
+public:
+    FFTProcessor(int size) : N(size) {
+        // Allocate memory for input and output
+        in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+        out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+        
+        // Create forward FFT plan
+        forward_plan = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+        
+        // Create inverse FFT plan
+        inverse_plan = fftw_plan_dft_1d(N, out, in, FFTW_BACKWARD, FFTW_ESTIMATE);
+    }
+
+    ~FFTProcessor() {
+        fftw_destroy_plan(forward_plan);
+        fftw_destroy_plan(inverse_plan);
+        fftw_free(in);
+        fftw_free(out);
+    }
+
+    std::vector<std::complex<double>> computeForwardDFT(const std::vector<double>& input) {
+        if (input.size() != static_cast<size_t>(N)) {
+            throw std::runtime_error("Input size mismatch");
+        }
+
+        // Copy input data to FFTW input array
+        for (int i = 0; i < N; i++) {
+            in[i][0] = input[i];  // Real part
+            in[i][1] = 0.0;       // Imaginary part
+        }
+
+        // Execute the forward plan
+        fftw_execute(forward_plan);
+
+        // Copy results to output vector
+        std::vector<std::complex<double>> result(N);
+        for (int i = 0; i < N; i++) {
+            result[i] = std::complex<double>(out[i][0], out[i][1]);
+        }
+
+        return result;
+    }
+
+    std::vector<double> computeInverseDFT(const std::vector<std::complex<double>>& input) {
+        if (input.size() != static_cast<size_t>(N)) {
+            throw std::runtime_error("Input size mismatch");
+        }
+
+        // Copy input data to FFTW output array (since inverse FFT reads from out)
+        for (int i = 0; i < N; i++) {
+            out[i][0] = input[i].real();
+            out[i][1] = input[i].imag();
+        }
+
+        // Execute the inverse plan
+        fftw_execute(inverse_plan);
+
+        // Copy results to output vector and normalize
+        std::vector<double> result(N);
+        for (int i = 0; i < N; i++) {
+            // Normalize by dividing by N (FFTW does not normalize automatically)
+            result[i] = in[i][0] / N;
+        }
+
+        return result;
+    }
+
+    // Utility method to perform forward FFT and then inverse FFT
+    std::vector<double> performRoundTrip(const std::vector<double>& input) {
+        auto fft_result = computeForwardDFT(input);
+        return computeInverseDFT(fft_result);
+    }
+};
+
 
 // Function to perform in-place Cooley-Tukey FFT
 void fftSplit(std::vector<std::complex<double>>& a) {
@@ -50,7 +140,6 @@ void fft(std::vector<std::complex<double>>& x) {
 }
 
 
-
 void ifft(std::vector<std::complex<double>>& a) {
     int n = a.size();
     if (n <= 1) return;
@@ -79,7 +168,7 @@ void lowPassFilter(std::vector<std::complex<double>>& frequencyDomainSignal, dou
 }
 
 // Low-pass filter function
-void applyLowPassFilter(std::vector<std::complex<float>>& frequencyDomainSignal, double sampleRate, double cutoffFrequency, double slope_dB_per_octave) {
+void applyLowPassFilter(std::vector<std::complex<double>>& frequencyDomainSignal, double sampleRate, double cutoffFrequency, double slope_dB_per_octave) {
     size_t N = frequencyDomainSignal.size();
     if (N == 0 || sampleRate <= 0) {
         throw std::invalid_argument("Invalid input parameters");
@@ -281,54 +370,31 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         }
         sampleBufferSize += bufferToFill.numSamples;
     }
-//    auto channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
-//    for (auto sample = 0; sample < bufferToFill.numSamples; ++sample) {
-//        sampleArray[sample] = const_cast<float*>(&channelData[sample]);
-//    }
-//    
+    
     if(sampleArray[0] != NULL) {
-        juce::dsp::FFT fftObj = juce::dsp::FFT(sqrt(BUFFERSIZE));
-        std::vector<std::complex<float>> audioSignal(BUFFERSIZE);
-        
-        std::vector<std::complex<float>> FFTin(BUFFERSIZE);
-        std::vector<std::complex<float>> FFTout(BUFFERSIZE);
-        
+        std::vector<double> samples(BUFFERSIZE);
         for (int i = 0; i < BUFFERSIZE; ++i) {
-            //samples[i] = *sampleArray[i];
-            audioSignal[i] = std::complex<double>(*sampleArray[i], 0);
-            FFTin[i] = std::complex<float>(*sampleArray[i], 0);
-            
-            //fftObj.perform(&FFTin[i], &FFTout[i], false);
+            samples[i] = *sampleArray[i];
         }
         
-        for (int i = 0; i < BUFFERSIZE; ++i) {
-            //audioSignal[i] = std::complex<double>(*sampleArray[i], 0);
-        }
+        FFTProcessor fft(BUFFERSIZE);
+        std::vector<std::complex<double>> spectrum = fft.computeForwardDFT(samples);
         
-        // Perform FFT
-        //fftSplit(audioSignal);
+        applyLowPassFilter(spectrum, sampleRateVar, frequencySlider1.getValue(), filterSlider1.getValue() * -1);
         
-        //applyLowPassFilter(FFTout, sampleRateVar, frequencySlider1.getValue(), filterSlider1.getValue() * -1);
-
         
         for (int i = 0; i < BUFFERSIZE; ++i) {
-            magnitudes[i] = std::pow(std::abs(FFTout[i]), 2);
-        }
-        
-        for (int i = 0; i < BUFFERSIZE; ++i) {
-            fftObj.perform(&FFTout[i], &FFTin[i], true);
+            magnitudes[i] = std::pow(std::abs(spectrum[i].real()), 2);
         }
         
         
+        // Inverse transform
+        auto reconstructed = fft.computeInverseDFT(spectrum);
         
-        
-        
-//        ifft(audioSignal);
-//
-//        
+    
        for (auto sample = 0; sample < channelInfo.numSamples; ++sample) {
-           channelInfo.buffer->setSample(0, sample, FFTin[sample].real());
-           channelInfo.buffer->setSample(1, sample, FFTin[sample].real());
+           channelInfo.buffer->setSample(0, sample, reconstructed[sample]);
+           channelInfo.buffer->setSample(1, sample, reconstructed[sample]);
         }
     }
 }
@@ -336,6 +402,20 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 void MainComponent::releaseResources()
 {
     
+}
+
+
+// Helper function to scale magnitudes to 0-1 range
+float normalizeMagnitude(float magnitude, float maxPossibleMagnitude) {
+    // Apply scaling and optional dB conversion
+    float scaledMag = magnitude / maxPossibleMagnitude;
+    
+    // Optional: Convert to dB scale (common for spectrum analyzers)
+    float dbMag = 20 * std::log10(scaledMag + 1e-6f); // Add small value to avoid log(0)
+    
+    // Map dB range (-100dB to 0dB) to 0-1
+    float normalizedDb = juce::jmap(dbMag, -100.0f, 0.0f, 0.0f, 1.0f);
+    return juce::jlimit(0.0f, 1.0f, normalizedDb);
 }
 
 //==============================================================================
@@ -359,41 +439,44 @@ void MainComponent::paint (juce::Graphics& g)
     if(sampleArray[0] != NULL) {
         juce::Path freqPath;
         juce::Path filterPath1;
-        float maxFreq = sampleRateVar / 2.0f;
         
-        std::vector<float> samples(BUFFERSIZE);
-        for (int i = 0; i < BUFFERSIZE; ++i) {
-            samples[i] = *sampleArray[i];
-        }
-        
-        Signal signal = Signal(samples, BUFFERSIZE);
-        Fourier fourier = Fourier(samples, sampleRateVar);
-        std::vector<Frequency*> frequencies = fourier.DFT();
-        
-        for (int i = 0; i < BUFFERSIZE; ++i) {
+        float maxFreq = std::min(20000.0f, sampleRateVar / 2.0f);
+        float minFreq = 20.0f;
+
+        for (int i = 0; i < BUFFERSIZE / 2; ++i) {
             float frequency = i * sampleRateVar/BUFFERSIZE;
             
-            // Scale frequency logarithmically for better visualization of lower frequencies
-            //float logFreq = std::log10(frequency + 1);  // Add 1 to avoid log(0)
-            //float logMaxFreq = std::log10(maxFreq + 1);
-            float xPos = spectraBounds.getX() + frequencies[i]->getFrequency();//(frequency / maxFreq) * (getWidth() - 2 * spectraBounds.getX());
-            float yPos = spectraBounds.getBottom() - frequencies[i]->getAmplitude() * 100; //scaleValue(magnitudes[i], 0, 1, spectraBounds.getY(), spectraBounds.getY() - spectraBounds.getHeight());
-
-            g.setColour (juce::Colours::white);
-            g.drawLine(xPos, yPos, xPos, spectraBounds.getBottom());
- //           g.drawText(std::to_string(i), xPos,spectraBounds.getBottom(), 80, 20, juce::Justification::left);
-            if (i % 50 == 0){
-                float mhz = frequency / 1000;
-                std::string rounded = std::to_string((int) std::round(mhz));
-                g.drawText(rounded, xPos,spectraBounds.getBottom(), 80, 20, juce::Justification::left);
+            // Skip frequencies outside 20Hz-20kHz range
+            if (frequency < minFreq || frequency > maxFreq) {
+                continue;
             }
-//            juce::Line<float> line;
-//            line.setStart(xPos, yPos);
-//            line.setEnd(xPos, spectraBounds.getBottom());
-//            freqPath.addLineSegment(line, 1);
             
+            // Scale magnitude to 0-1 range
+            float normalizedMagnitude = normalizeMagnitude(magnitudes[i], BUFFERSIZE);
+            
+            // Scale frequency logarithmically for better visualization
+            float logFreq = std::log10(frequency);
+            float logMaxFreq = std::log10(maxFreq);
+            float logMinFreq = std::log10(minFreq);
+            
+            // Normalize position to the visible frequency range
+            float normalizedPos = (logFreq - logMinFreq) / (logMaxFreq - logMinFreq);
+            float xPos = spectraBounds.getX() + normalizedPos * (getWidth() - 2 * spectraBounds.getX());
+            float yPos = spectraBounds.getBottom() - (normalizedMagnitude * spectraBounds.getHeight());
+
+            g.setColour(juce::Colours::white);
+            g.drawLine(xPos, yPos, xPos, spectraBounds.getBottom());
+
+            // Draw frequency labels at logarithmically spaced intervals
+            static const float labelFreqs[] = {20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000};
+            for (float labelFreq : labelFreqs) {
+                if (std::abs(frequency - labelFreq) < (sampleRateVar/BUFFERSIZE/2)) {
+                    float displayFreq = labelFreq >= 1000 ? labelFreq/1000 : labelFreq;
+                    juce::String label = juce::String(displayFreq) + (labelFreq >= 1000 ? "k" : "");
+                    g.drawText(label, xPos - 20, spectraBounds.getBottom(), 40, 20, juce::Justification::left);
+                }
+            }
         }
-        
         juce::Line<float> filterLine1;
         filterLine1.setStart(spectraBounds.getX() + (frequencySlider1.getValue() / maxFreq)  * (getWidth() - 2 * spectraBounds.getX()),
                              scaleValue(filterSlider1.getValue() * -1, filterSlider1.getMinimum(), filterSlider1.getMaximum(), spectraBounds.getY(), spectraBounds.getY() + spectraBounds.getHeight()));
@@ -402,8 +485,6 @@ void MainComponent::paint (juce::Graphics& g)
         
         g.setColour (juce::Colours::orange);
         g.fillPath(filterPath1);
-//        g.setColour (juce::Colours::white);
-//        g.fillPath(freqPath);
     }
 }
 
