@@ -255,73 +255,89 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     stopButton.setColour (juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setEnabled (false);
     
-    addAndMakeVisible (frequencySlider1);
-    frequencySlider1.setRange (minimumFrequency, maximumFrequency);
-    frequencySlider1.setTextValueSuffix (" Hz");
-    frequencySlider1.setSliderStyle(juce::Slider::Rotary);
-    frequencySlider1.setValue(maximumFrequency);
-    
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+    addAndMakeVisible (lowPassFreqSlider);
+    lowPassFreqSlider.setRange (minimumFrequency, maximumFrequency);
+    lowPassFreqSlider.setTextValueSuffix (" Hz");
+    lowPassFreqSlider.setSliderStyle(juce::Slider::Rotary);
+    lowPassFreqSlider.setValue(maximumFrequency);
      
-    addAndMakeVisible(frequencyLabel1);
-    frequencyLabel1.setText ("Frequency", juce::dontSendNotification);
-    frequencyLabel1.attachToComponent (&frequencySlider1, true);
-    frequencySlider1.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider1.getTextBoxHeight());
+    addAndMakeVisible(lowPassFreqLabel);
+    lowPassFreqLabel.setText ("Frequency", juce::dontSendNotification);
+    lowPassFreqLabel.attachToComponent (&lowPassFreqSlider, true);
+    lowPassFreqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, lowPassFreqSlider.getTextBoxHeight());
     
-    addAndMakeVisible (filterSlider1);
-    filterSlider1.setRange (-24.0, 24.0);
-    filterSlider1.setTextValueSuffix (" dB");
-    filterSlider1.setSliderStyle(juce::Slider::LinearVertical);
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
+    addAndMakeVisible (lowPassFilterSlider);
+    lowPassFilterSlider.setRange (-24.0, 24.0);
+    lowPassFilterSlider.setTextValueSuffix (" dB");
+    lowPassFilterSlider.setSliderStyle(juce::Slider::LinearVertical);
      
-    addAndMakeVisible(filterLabel1);
-    filterLabel1.setText ("Filter", juce::dontSendNotification);
-    filterLabel1.attachToComponent (&filterSlider1, true);
-    filterSlider1.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider1.getTextBoxHeight());
+    addAndMakeVisible(lowPassFilterLabel);
+    lowPassFilterLabel.setText ("Filter", juce::dontSendNotification);
+    lowPassFilterLabel.attachToComponent (&lowPassFilterSlider, true);
+    lowPassFilterSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, lowPassFilterSlider.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider2);
     frequencySlider2.setRange (50, 500.0);
     frequencySlider2.setTextValueSuffix (" Hz");
     frequencySlider2.setSliderStyle(juce::Slider::Rotary);
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
-    
-    addAndMakeVisible(frequencyLabel2);
-    frequencyLabel2.setText ("Frequency", juce::dontSendNotification);
-    frequencyLabel2.attachToComponent (&frequencySlider2, true);
     frequencySlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider2.getTextBoxHeight());
     
     addAndMakeVisible (filterSlider2);
     filterSlider2.setRange (-12.0, 24.0);
     filterSlider2.setTextValueSuffix (" Db");
     filterSlider2.setSliderStyle(juce::Slider::LinearVertical   );
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
-     
-    addAndMakeVisible(filterLabel2);
-    filterLabel2.setText ("Filter", juce::dontSendNotification);
-    filterLabel2.attachToComponent (&filterSlider2, true);
     filterSlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider2.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider3);
     frequencySlider3.setRange (50, 500.0);
     frequencySlider3.setTextValueSuffix (" Hz");
     frequencySlider3.setSliderStyle(juce::Slider::Rotary);
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
-     
-    addAndMakeVisible(frequencyLabel3);
-    frequencyLabel3.setText ("Frequency", juce::dontSendNotification);
-    frequencyLabel3.attachToComponent (&frequencySlider3, true);
     frequencySlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider3.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider4);
     frequencySlider4.setRange (50, 500.0);
     frequencySlider4.setTextValueSuffix (" Hz");
     frequencySlider4.setSliderStyle(juce::Slider::Rotary);
-//            frequencySlider.onValueChange = [this] { durationSlider.setValue (1.0 / frequencySlider.getValue(), juce::dontSendNotification); };
      
     addAndMakeVisible(frequencyLabel4);
-    frequencyLabel4.setText ("Frequency", juce::dontSendNotification);
     frequencyLabel4.attachToComponent (&frequencySlider4, true);
     frequencySlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider4.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider5);
+    frequencySlider5.setRange (50, 500.0);
+    frequencySlider5.setTextValueSuffix (" Hz");
+    frequencySlider5.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider5.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider5.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider6);
+    frequencySlider6.setRange (50, 500.0);
+    frequencySlider6.setTextValueSuffix (" Hz");
+    frequencySlider6.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider6.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider6.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider7);
+    frequencySlider7.setRange (50, 500.0);
+    frequencySlider7.setTextValueSuffix (" Hz");
+    frequencySlider7.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider7.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider7.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider8);
+    frequencySlider8.setRange (50, 500.0);
+    frequencySlider8.setTextValueSuffix (" Hz");
+    frequencySlider8.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider8.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider8.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider9);
+    frequencySlider9.setRange (50, 500.0);
+    frequencySlider9.setTextValueSuffix (" Hz");
+    frequencySlider9.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider9.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider9.getTextBoxHeight());
+    
+    addAndMakeVisible (highPassFreqSlider);
+    highPassFreqSlider.setRange (50, 500.0);
+    highPassFreqSlider.setTextValueSuffix (" Hz");
+    highPassFreqSlider.setSliderStyle(juce::Slider::Rotary);
+    highPassFreqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, highPassFreqSlider.getTextBoxHeight());
     
     
     formatManager.registerBasicFormats();
@@ -380,13 +396,12 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         FFTProcessor fft(BUFFERSIZE);
         std::vector<std::complex<double>> spectrum = fft.computeForwardDFT(samples);
         
-        applyLowPassFilter(spectrum, sampleRateVar, frequencySlider1.getValue(), filterSlider1.getValue() * -1);
+        applyLowPassFilter(spectrum, sampleRateVar, lowPassFreqSlider.getValue(), lowPassFilterSlider.getValue() * -1);
         
         
         for (int i = 0; i < BUFFERSIZE; ++i) {
             magnitudes[i] = std::pow(std::abs(spectrum[i].real()), 2);
         }
-        
         
         // Inverse transform
         auto reconstructed = fft.computeInverseDFT(spectrum);
@@ -478,8 +493,8 @@ void MainComponent::paint (juce::Graphics& g)
             }
         }
         juce::Line<float> filterLine1;
-        filterLine1.setStart(spectraBounds.getX() + (frequencySlider1.getValue() / maxFreq)  * (getWidth() - 2 * spectraBounds.getX()),
-                             scaleValue(filterSlider1.getValue() * -1, filterSlider1.getMinimum(), filterSlider1.getMaximum(), spectraBounds.getY(), spectraBounds.getY() + spectraBounds.getHeight()));
+        filterLine1.setStart(spectraBounds.getX() + (lowPassFreqSlider.getValue() / maxFreq)  * (getWidth() - 2 * spectraBounds.getX()),
+                             scaleValue(lowPassFilterSlider.getValue() * -1, lowPassFilterSlider.getMinimum(), lowPassFilterSlider.getMaximum(), spectraBounds.getY(), spectraBounds.getY() + spectraBounds.getHeight()));
         filterLine1.setEnd(filterLine1.getStart().getX(), spectraBounds.getBottom());
         filterPath1.addLineSegment(filterLine1, 1);
         
@@ -495,20 +510,30 @@ void MainComponent::resized()
     stopButton.setBounds(getWidth() / 2 + buttonWidth / 2,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
     
     auto sliderLeft = windowBorder_x + labelOffset;
-    auto sliderOffset = frequencySliderWidth * 2;
+    auto sliderOffset = (getWidth() - labelOffset - windowBorder_x * 2) / 10 ;
     auto sliderY = getHeight() - 320;
-    frequencySlider1.setBounds (sliderLeft, sliderY, frequencySliderWidth, frequencySliderHeight);
-    filterSlider1.setBounds (sliderLeft, sliderY - 210, filterSliderWidth, filterSliderHeight);
-    frequencySlider2.setBounds (sliderLeft + sliderOffset, sliderY, frequencySliderWidth, frequencySliderHeight);
-    filterSlider2.setBounds (sliderLeft + sliderOffset, sliderY - 210, filterSliderWidth, filterSliderHeight);
-    frequencySlider3.setBounds (sliderLeft + (sliderOffset * 2), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider4.setBounds (sliderLeft + (sliderOffset * 3), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider5.setBounds (sliderLeft + (sliderOffset * 4), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider6.setBounds (sliderLeft + (sliderOffset * 5), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider7.setBounds (sliderLeft + (sliderOffset * 6), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider8.setBounds (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider9.setBounds (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider10.setBounds (sliderLeft + (sliderOffset * 9), sliderY, frequencySliderWidth, frequencySliderHeight);
+    
+    lowPassFilterSlider.setBounds  (sliderLeft,                      sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider2.setBounds        (sliderLeft + sliderOffset,       sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider3.setBounds        (sliderLeft + (sliderOffset * 2), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider4.setBounds        (sliderLeft + (sliderOffset * 3), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider5.setBounds        (sliderLeft + (sliderOffset * 4), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider6.setBounds        (sliderLeft + (sliderOffset * 5), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider7.setBounds        (sliderLeft + (sliderOffset * 6), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider8.setBounds        (sliderLeft + (sliderOffset * 7), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider9.setBounds        (sliderLeft + (sliderOffset * 8), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    highPassFilterSlider.setBounds (sliderLeft + (sliderOffset * 9), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    
+    lowPassFreqSlider.setBounds  (sliderLeft,                      sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider2.setBounds   (sliderLeft + sliderOffset,       sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider3.setBounds   (sliderLeft + (sliderOffset * 2), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider4.setBounds   (sliderLeft + (sliderOffset * 3), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider5.setBounds   (sliderLeft + (sliderOffset * 4), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider6.setBounds   (sliderLeft + (sliderOffset * 5), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider7.setBounds   (sliderLeft + (sliderOffset * 6), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider8.setBounds   (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider9.setBounds   (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
+    highPassFreqSlider.setBounds (sliderLeft + (sliderOffset * 9), sliderY, frequencySliderWidth, frequencySliderHeight);
 }
 
 

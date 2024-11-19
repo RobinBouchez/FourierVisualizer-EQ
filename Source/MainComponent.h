@@ -60,32 +60,56 @@ private:
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
     
-    juce::Slider frequencySlider1;
-    juce::Label  frequencyLabel1;
-    juce::Slider filterSlider1;
-    juce::Label  filterLabel1;
+    juce::Slider lowPassFreqSlider;
+    juce::Label  lowPassFreqLabel;
+    juce::Slider lowPassFilterSlider;
+    juce::Label  lowPassFilterLabel;
+    
     juce::Slider frequencySlider2;
     juce::Label  frequencyLabel2;
     juce::Slider filterSlider2;
     juce::Label  filterLabel2;
+    
     juce::Slider frequencySlider3;
     juce::Label  frequencyLabel3;
     juce::Slider filterSlider3;
     juce::Label  filterLabel3;
+    
     juce::Slider frequencySlider4;
     juce::Label  frequencyLabel4;
+    juce::Slider filterSlider4;
+    juce::Label  filterLabel4;
+    
     juce::Slider frequencySlider5;
     juce::Label  frequencyLabel5;
+    juce::Slider filterSlider5;
+    juce::Label  filterLabel5;
+    
     juce::Slider frequencySlider6;
     juce::Label  frequencyLabel6;
+    juce::Slider filterSlider6;
+    juce::Label  filterLabel6;
+    
     juce::Slider frequencySlider7;
     juce::Label  frequencyLabel7;
+    juce::Slider filterSlider7;
+    juce::Label  filterLabel7;
+    
     juce::Slider frequencySlider8;
     juce::Label  frequencyLabel8;
+    juce::Slider filterSlider8;
+    juce::Label  filterLabel8;
+    
     juce::Slider frequencySlider9;
     juce::Label  frequencyLabel9;
-    juce::Slider frequencySlider10;
-    juce::Label  frequencyLabel10;
+    juce::Slider filterSlider9;
+    juce::Label  filterLabel9;
+    
+    juce::Slider highPassFreqSlider;
+    juce::Label  highPassFreqLabel;
+    juce::Slider highPassFilterSlider;
+    juce::Label  highPassFilterLabel;
+    
     juce::AudioSourceChannelInfo channelInfo;
     
     float sampleRateVar;
@@ -93,9 +117,9 @@ private:
     const float windowBorder_x = 20.f;
     const float windowBorder_y = 20.f;
     
-    const float frequencySliderWidth = 80;
+    const float frequencySliderWidth = 120;
     const float frequencySliderHeight = 80;
-    const float filterSliderWidth = 80;
+    const float filterSliderWidth = 100;
     const float filterSliderHeight = 200;
     
     const float thumbnailWidth = 150;
