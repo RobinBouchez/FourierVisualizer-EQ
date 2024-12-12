@@ -45,6 +45,9 @@ private:
     void thumbnailChanged();
     void paintIfNoFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
     void paintIfFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
+    juce::Line<float> createFilterLine(juce::Rectangle<int> bounds, float pos, float nextPos, float gain, float cutOffFreq, float nextCutOffFreq, float freq, float nextFreq, float offset);
+    
+    void readFile(juce::File file);
     
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> playSource;
@@ -59,6 +62,40 @@ private:
     
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
+    
+    juce::TextButton lowPassButton;
+    bool isLowPassEnabled = false;
+    
+    juce::TextButton highPassButton;
+    bool isHighPassEnabled = false;
+    
+    juce::TextButton filterButton1;
+    bool isFilter1Enabled = false;
+    
+    juce::TextButton filterButton2;
+    bool isFilter2Enabled = false;
+    
+    juce::TextButton filterButton3;
+    bool isFilter3Enabled = false;
+    
+    juce::TextButton filterButton4;
+    bool isFilter4Enabled = false;
+    
+    juce::TextButton filterButton5;
+    bool isFilter5Enabled = false;
+    
+    juce::TextButton filterButton6;
+    bool isFilter6Enabled = false;
+    
+    juce::TextButton filterButton7;
+    bool isFilter7Enabled = false;
+    
+    juce::TextButton filterButton8;
+    bool isFilter8Enabled = false;
+    
+    juce::TextButton realtimeButton;
+    bool isRealtime = true;
+    
     
     juce::Slider lowPassFreqSlider;
     juce::Label  lowPassFreqLabel;
@@ -114,7 +151,7 @@ private:
     
     float sampleRateVar;
     
-    const float windowBorder_x = 20.f;
+    const float windowBorder_x = 50.f;
     const float windowBorder_y = 20.f;
     
     const float frequencySliderWidth = 120;
@@ -132,6 +169,12 @@ private:
     
     const float minimumFrequency = 20;
     const float maximumFrequency = 20000;
+    
+    const float minFilterGain = -18.f;
+    const float maxFilterGain = 18.f;
+    
+    const int leftChannel = 0;
+    const int rightChannel = 1;
     
     
 
