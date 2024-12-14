@@ -69,12 +69,6 @@ private:
     juce::TextButton highPassButton;
     bool isHighPassEnabled = false;
     
-    juce::TextButton filterButton1;
-    bool isFilter1Enabled = false;
-    
-    juce::TextButton filterButton2;
-    bool isFilter2Enabled = false;
-    
     juce::TextButton filterButton3;
     bool isFilter3Enabled = false;
     
@@ -93,6 +87,12 @@ private:
     juce::TextButton filterButton8;
     bool isFilter8Enabled = false;
     
+    juce::TextButton filterButton9;
+    bool isFilter9Enabled = false;
+    
+    juce::TextButton filterButton10;
+    bool isFilter10Enabled = false;
+    
     juce::TextButton realtimeButton;
     bool isRealtime = true;
     
@@ -102,44 +102,44 @@ private:
     juce::Slider lowPassFilterSlider;
     juce::Label  lowPassFilterLabel;
     
-    juce::Slider frequencySlider2;
+    juce::Slider frequencySlider3;
     juce::Label  frequencyLabel2;
-    juce::Slider filterSlider2;
+    juce::Slider filterSlider3;
     juce::Label  filterLabel2;
     
-    juce::Slider frequencySlider3;
+    juce::Slider frequencySlider4;
     juce::Label  frequencyLabel3;
-    juce::Slider filterSlider3;
+    juce::Slider filterSlider4;
     juce::Label  filterLabel3;
     
-    juce::Slider frequencySlider4;
+    juce::Slider frequencySlider5;
     juce::Label  frequencyLabel4;
-    juce::Slider filterSlider4;
+    juce::Slider filterSlider5;
     juce::Label  filterLabel4;
     
-    juce::Slider frequencySlider5;
+    juce::Slider frequencySlider6;
     juce::Label  frequencyLabel5;
-    juce::Slider filterSlider5;
+    juce::Slider filterSlider6;
     juce::Label  filterLabel5;
     
-    juce::Slider frequencySlider6;
+    juce::Slider frequencySlider7;
     juce::Label  frequencyLabel6;
-    juce::Slider filterSlider6;
+    juce::Slider filterSlider7;
     juce::Label  filterLabel6;
     
-    juce::Slider frequencySlider7;
+    juce::Slider frequencySlider8;
     juce::Label  frequencyLabel7;
-    juce::Slider filterSlider7;
+    juce::Slider filterSlider8;
     juce::Label  filterLabel7;
     
-    juce::Slider frequencySlider8;
+    juce::Slider frequencySlider9;
     juce::Label  frequencyLabel8;
-    juce::Slider filterSlider8;
+    juce::Slider filterSlider9;
     juce::Label  filterLabel8;
     
-    juce::Slider frequencySlider9;
+    juce::Slider frequencySlider10;
     juce::Label  frequencyLabel9;
-    juce::Slider filterSlider9;
+    juce::Slider filterSlider10;
     juce::Label  filterLabel9;
     
     juce::Slider highPassFreqSlider;

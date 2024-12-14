@@ -175,22 +175,6 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     highPassButton.setButtonText ((isHighPassEnabled) ? "enabled" : "disabled");
     highPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     
-    addAndMakeVisible(&filterButton1);
-    filterButton1.onClick = [this] {
-        isFilter1Enabled = !isFilter1Enabled;
-        filterButton1.setButtonText ((isFilter1Enabled) ? "enabled" : "disabled");
-    };
-    filterButton1.setButtonText ((isFilter1Enabled) ? "enabled" : "disabled");
-    filterButton1.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
-    
-    addAndMakeVisible(&filterButton2);
-    filterButton2.onClick = [this] {
-        isFilter2Enabled = !isFilter2Enabled;
-        filterButton2.setButtonText ((isFilter2Enabled) ? "enabled" : "disabled");
-    };
-    filterButton2.setButtonText ((isFilter2Enabled) ? "enabled" : "disabled");
-    filterButton2.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
-    
     addAndMakeVisible(&filterButton3);
     filterButton3.onClick = [this] {
         isFilter3Enabled = !isFilter3Enabled;
@@ -239,6 +223,22 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton8.setButtonText ((isFilter8Enabled) ? "enabled" : "disabled");
     filterButton8.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     
+    addAndMakeVisible(&filterButton9);
+    filterButton9.onClick = [this] {
+        isFilter9Enabled = !isFilter9Enabled;
+        filterButton9.setButtonText ((isFilter9Enabled) ? "enabled" : "disabled");
+    };
+    filterButton9.setButtonText ((isFilter9Enabled) ? "enabled" : "disabled");
+    filterButton9.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
+    
+    addAndMakeVisible(&filterButton10);
+    filterButton10.onClick = [this] {
+        isFilter10Enabled = !isFilter10Enabled;
+        filterButton10.setButtonText ((isFilter10Enabled) ? "enabled" : "disabled");
+    };
+    filterButton10.setButtonText ((isFilter10Enabled) ? "enabled" : "disabled");
+    filterButton10.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
+    
     addAndMakeVisible(&realtimeButton);
     realtimeButton.onClick = [this] {
         isRealtime = !isRealtime;
@@ -269,20 +269,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     lowPassFilterLabel.attachToComponent (&lowPassFilterSlider, true);
     lowPassFilterSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, lowPassFilterSlider.getTextBoxHeight());
     
-    addAndMakeVisible (frequencySlider2);
-    frequencySlider2.setRange (50, 500.0);
-    frequencySlider2.setTextValueSuffix (" Hz");
-    frequencySlider2.setSliderStyle(juce::Slider::Rotary);
-    frequencySlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider2.getTextBoxHeight());
-    
-    addAndMakeVisible (filterSlider2);
-    filterSlider2.setRange (minFilterGain, maxFilterGain);
-    filterSlider2.setTextValueSuffix (" Db");
-    filterSlider2.setSliderStyle(juce::Slider::LinearVertical   );
-    filterSlider2.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider2.getTextBoxHeight());
-    
     addAndMakeVisible (frequencySlider3);
-    frequencySlider3.setRange (100, 200.0);
+    frequencySlider3.setRange (50, 500.0);
     frequencySlider3.setTextValueSuffix (" Hz");
     frequencySlider3.setSliderStyle(juce::Slider::Rotary);
     frequencySlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider3.getTextBoxHeight());
@@ -290,26 +278,26 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     addAndMakeVisible (filterSlider3);
     filterSlider3.setRange (minFilterGain, maxFilterGain);
     filterSlider3.setTextValueSuffix (" Db");
-    filterSlider3.setSliderStyle(juce::Slider::LinearVertical);
+    filterSlider3.setSliderStyle(juce::Slider::LinearVertical   );
     filterSlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider3.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider4);
-    frequencySlider4.setRange (200, 500.0);
+    frequencySlider4.setRange (100, 200.0);
     frequencySlider4.setTextValueSuffix (" Hz");
     frequencySlider4.setSliderStyle(juce::Slider::Rotary);
-    frequencyLabel4.attachToComponent (&frequencySlider4, true);
     frequencySlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider4.getTextBoxHeight());
     
     addAndMakeVisible (filterSlider4);
     filterSlider4.setRange (minFilterGain, maxFilterGain);
     filterSlider4.setTextValueSuffix (" Db");
-    filterSlider4.setSliderStyle(juce::Slider::LinearVertical   );
+    filterSlider4.setSliderStyle(juce::Slider::LinearVertical);
     filterSlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider4.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider5);
-    frequencySlider5.setRange (500, 1000.0);
+    frequencySlider5.setRange (200, 500.0);
     frequencySlider5.setTextValueSuffix (" Hz");
     frequencySlider5.setSliderStyle(juce::Slider::Rotary);
+    frequencyLabel4.attachToComponent (&frequencySlider5, true);
     frequencySlider5.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider5.getTextBoxHeight());
     
     addAndMakeVisible (filterSlider5);
@@ -319,7 +307,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider5.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider5.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider6);
-    frequencySlider6.setRange (1000, 5000.0);
+    frequencySlider6.setRange (500, 1000.0);
     frequencySlider6.setTextValueSuffix (" Hz");
     frequencySlider6.setSliderStyle(juce::Slider::Rotary);
     frequencySlider6.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider6.getTextBoxHeight());
@@ -331,7 +319,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider6.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider6.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider7);
-    frequencySlider7.setRange (5000, 10000.0);
+    frequencySlider7.setRange (1000, 5000.0);
     frequencySlider7.setTextValueSuffix (" Hz");
     frequencySlider7.setSliderStyle(juce::Slider::Rotary);
     frequencySlider7.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider7.getTextBoxHeight());
@@ -343,7 +331,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider7.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider7.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider8);
-    frequencySlider8.setRange (10000.0, 20000.0);
+    frequencySlider8.setRange (5000, 10000.0);
     frequencySlider8.setTextValueSuffix (" Hz");
     frequencySlider8.setSliderStyle(juce::Slider::Rotary);
     frequencySlider8.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider8.getTextBoxHeight());
@@ -365,6 +353,18 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider9.setTextValueSuffix (" Db");
     filterSlider9.setSliderStyle(juce::Slider::LinearVertical   );
     filterSlider9.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider9.getTextBoxHeight());
+    
+    addAndMakeVisible (frequencySlider10);
+    frequencySlider10.setRange (10000.0, 20000.0);
+    frequencySlider10.setTextValueSuffix (" Hz");
+    frequencySlider10.setSliderStyle(juce::Slider::Rotary);
+    frequencySlider10.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider10.getTextBoxHeight());
+    
+    addAndMakeVisible (filterSlider10);
+    filterSlider10.setRange (minFilterGain, maxFilterGain);
+    filterSlider10.setTextValueSuffix (" Db");
+    filterSlider10.setSliderStyle(juce::Slider::LinearVertical   );
+    filterSlider10.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider10.getTextBoxHeight());
     
     addAndMakeVisible (highPassFreqSlider);
     highPassFreqSlider.setRange (minimumFrequency, maximumFrequency);
@@ -476,9 +476,8 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     }
 }
 
-void MainComponent::releaseResources()
-{
-    
+void MainComponent::releaseResources() {
+    transportSource.releaseResources();
 }
 
 
@@ -559,9 +558,9 @@ void MainComponent::paint (juce::Graphics& g)
             float normalizedMagnitude = normalizeMagnitude(magnitudes[i], BUFFERSIZE / 2);
             
             // Scale frequency logarithmically for better visualization
-            float logFreq = std::log10(frequency);
-            float logMaxFreq = std::log10(maxFreq);
-            float logMinFreq = std::log10(minFreq);
+            float logFreq = frequency;
+            float logMaxFreq = maxFreq;
+            float logMinFreq = minFreq;
             
             // Normalize position to the visible frequency range
             float normalizedPos = (logFreq - logMinFreq) / (logMaxFreq - logMinFreq);
@@ -574,7 +573,7 @@ void MainComponent::paint (juce::Graphics& g)
             }
 
             float nextfrequency = (i + 1) * sampleRateVar/BUFFERSIZE;
-            float nextlogFreq = std::log10(nextfrequency);
+            float nextlogFreq =(nextfrequency);
             
             // Normalize position to the visible frequency range
             float nextnormalizedPos = (nextlogFreq - logMinFreq) / (logMaxFreq - logMinFreq);
@@ -596,69 +595,76 @@ void MainComponent::paint (juce::Graphics& g)
                                                             highPassFreqSlider.getValue(), highPassFreqSlider.getValue(),
                                                             0), 1);
             }
-            if(isFilter1Enabled){
+            if(isFilter3Enabled){
                 filterPath3.addLineSegment(createFilterLine(spectraBounds,
                                                             xPos, nextxPos,
-                                                            filterSlider2.getValue(),
-                                                            (frequencySlider2.getMaximum() - frequencySlider2.getMinimum()) / 2, (frequencySlider2.getMaximum() - frequencySlider2.getMinimum()) / 2,
-                                                            frequency, nextfrequency,
-                                                            frequencySlider2.getValue()), 1);
-            }
-            if(isFilter2Enabled){
-                filterPath4.addLineSegment(createFilterLine(spectraBounds,
-                                                            xPos, nextxPos,
                                                             filterSlider3.getValue(),
-                                                            (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2, (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2,
+                                                            (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2,
+                                                            (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2,
                                                             frequency, nextfrequency,
                                                             frequencySlider3.getValue()), 1);
             }
-            if(isFilter3Enabled) {
-                filterPath5.addLineSegment(createFilterLine(spectraBounds,
+            if(isFilter4Enabled){
+                filterPath4.addLineSegment(createFilterLine(spectraBounds,
                                                             xPos, nextxPos,
                                                             filterSlider4.getValue(),
-                                                            (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2, (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2,
+                                                            (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2,
+                                                            (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2,
                                                             frequency, nextfrequency,
                                                             frequencySlider4.getValue()), 1);
             }
-            if(isFilter4Enabled) {
-                filterPath6.addLineSegment(createFilterLine(spectraBounds,
+            if(isFilter5Enabled) {
+                filterPath5.addLineSegment(createFilterLine(spectraBounds,
                                                             xPos, nextxPos,
                                                             filterSlider5.getValue(),
-                                                            (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2, (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2,
+                                                            (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2,
+                                                            (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2,
                                                             frequency, nextfrequency,
                                                             frequencySlider5.getValue()), 1);
             }
-            if(isFilter5Enabled) {
-                            filterPath7.addLineSegment(createFilterLine(spectraBounds,
-                                                                        xPos, nextxPos,
-                                                                        filterSlider6.getValue(),
-                                                                        frequencySlider6.getMaximum() - frequencySlider6.getMinimum(), frequencySlider6.getMaximum() - frequencySlider6.getMinimum(),
-                                                                        frequency, nextfrequency,
-                                                                        frequencySlider6.getValue()), 1);
-            }
             if(isFilter6Enabled) {
-                filterPath8.addLineSegment(createFilterLine(spectraBounds,
+                filterPath6.addLineSegment(createFilterLine(spectraBounds,
                                                             xPos, nextxPos,
-                                                            filterSlider7.getValue(),
-                                                            frequencySlider7.getValue(), frequencySlider7.getValue(),
+                                                            filterSlider6.getValue(),
+                                                            (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2,
+                                                            (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider7.getValue()), 1);
+                                                            frequencySlider6.getValue()), 1);
             }
             if(isFilter7Enabled) {
-                filterPath9.addLineSegment(createFilterLine(spectraBounds,
+                            filterPath7.addLineSegment(createFilterLine(spectraBounds,
+                                                                        xPos, nextxPos,
+                                                                        filterSlider7.getValue(),
+                                                                        (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2,
+                                                                        (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2,
+                                                                        frequency, nextfrequency,
+                                                                        frequencySlider7.getValue()), 1);
+            }
+            if(isFilter8Enabled) {
+                filterPath8.addLineSegment(createFilterLine(spectraBounds,
                                                             xPos, nextxPos,
                                                             filterSlider8.getValue(),
-                                                            frequencySlider8.getValue(), frequencySlider8.getValue(),
+                                                            (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2,
+                                                            (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2,
                                                             frequency, nextfrequency,
                                                             frequencySlider8.getValue()), 1);
             }
-            if(isFilter8Enabled) {
+            if(isFilter9Enabled) {
+                filterPath9.addLineSegment(createFilterLine(spectraBounds,
+                                                            xPos, nextxPos,
+                                                            filterSlider9.getValue(),
+                                                            (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2,
+                                                            (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2,
+                                                            frequency, nextfrequency,
+                                                            frequencySlider9.getValue()), 1);
+            }
+            if(isFilter10Enabled) {
                 filterPath10.addLineSegment(createFilterLine(spectraBounds,
                                                              xPos, nextxPos,
-                                                             filterSlider9.getValue(),
-                                                             frequencySlider9.getValue(), frequencySlider9.getValue(),
+                                                             filterSlider10.getValue(),
+                                                             frequencySlider10.getValue(), frequencySlider10.getValue(),
                                                              frequency, nextfrequency,
-                                                             frequencySlider9.getValue()), 1);
+                                                             frequencySlider10.getValue()), 1);
             }
 
 
@@ -709,36 +715,36 @@ void MainComponent::resized()
     realtimeButton.setBounds(getWidth() - windowBorder_x - 150, getHeight() - buttonHeight - windowBorder_y, 150, buttonHeight);
     
     lowPassButton.setBounds(sliderLeft, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton1.setBounds(sliderLeft + sliderOffset, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton2.setBounds(sliderLeft + (sliderOffset * 2), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton3.setBounds(sliderLeft + (sliderOffset * 3), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton4.setBounds(sliderLeft + (sliderOffset * 4), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton5.setBounds(sliderLeft + (sliderOffset * 5), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton6.setBounds(sliderLeft + (sliderOffset * 6), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton7.setBounds(sliderLeft + (sliderOffset * 7), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton8.setBounds(sliderLeft + (sliderOffset * 8), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton3.setBounds(sliderLeft + sliderOffset, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton4.setBounds(sliderLeft + (sliderOffset * 2), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton5.setBounds(sliderLeft + (sliderOffset * 3), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton6.setBounds(sliderLeft + (sliderOffset * 4), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton7.setBounds(sliderLeft + (sliderOffset * 5), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton8.setBounds(sliderLeft + (sliderOffset * 6), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton9.setBounds(sliderLeft + (sliderOffset * 7), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton10.setBounds(sliderLeft + (sliderOffset * 8), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
     highPassButton.setBounds(sliderLeft + (sliderOffset * 9), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
     
     lowPassFilterSlider.setBounds  (sliderLeft,                      sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider2.setBounds        (sliderLeft + sliderOffset,       sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider3.setBounds        (sliderLeft + (sliderOffset * 2), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider4.setBounds        (sliderLeft + (sliderOffset * 3), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider5.setBounds        (sliderLeft + (sliderOffset * 4), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider6.setBounds        (sliderLeft + (sliderOffset * 5), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider7.setBounds        (sliderLeft + (sliderOffset * 6), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider8.setBounds        (sliderLeft + (sliderOffset * 7), sliderY - 210, filterSliderWidth, filterSliderHeight);
-    filterSlider9.setBounds        (sliderLeft + (sliderOffset * 8), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider3.setBounds        (sliderLeft + sliderOffset,       sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider4.setBounds        (sliderLeft + (sliderOffset * 2), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider5.setBounds        (sliderLeft + (sliderOffset * 3), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider6.setBounds        (sliderLeft + (sliderOffset * 4), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider7.setBounds        (sliderLeft + (sliderOffset * 5), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider8.setBounds        (sliderLeft + (sliderOffset * 6), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider9.setBounds        (sliderLeft + (sliderOffset * 7), sliderY - 210, filterSliderWidth, filterSliderHeight);
+    filterSlider10.setBounds        (sliderLeft + (sliderOffset * 8), sliderY - 210, filterSliderWidth, filterSliderHeight);
     highPassFilterSlider.setBounds (sliderLeft + (sliderOffset * 9), sliderY - 210, filterSliderWidth, filterSliderHeight);
     
     lowPassFreqSlider.setBounds  (sliderLeft,                      sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider2.setBounds   (sliderLeft + sliderOffset,       sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider3.setBounds   (sliderLeft + (sliderOffset * 2), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider4.setBounds   (sliderLeft + (sliderOffset * 3), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider5.setBounds   (sliderLeft + (sliderOffset * 4), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider6.setBounds   (sliderLeft + (sliderOffset * 5), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider7.setBounds   (sliderLeft + (sliderOffset * 6), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider8.setBounds   (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
-    frequencySlider9.setBounds   (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider3.setBounds   (sliderLeft + sliderOffset,       sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider4.setBounds   (sliderLeft + (sliderOffset * 2), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider5.setBounds   (sliderLeft + (sliderOffset * 3), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider6.setBounds   (sliderLeft + (sliderOffset * 4), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider7.setBounds   (sliderLeft + (sliderOffset * 5), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider8.setBounds   (sliderLeft + (sliderOffset * 6), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider9.setBounds   (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
+    frequencySlider10.setBounds   (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
     highPassFreqSlider.setBounds (sliderLeft + (sliderOffset * 9), sliderY, frequencySliderWidth, frequencySliderHeight);
 }
 
