@@ -63,6 +63,9 @@ private:
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
     
+    juce::TextButton logButton;
+    bool isLogEnabled = false;
+    
     juce::TextButton lowPassButton;
     bool isLowPassEnabled = false;
     

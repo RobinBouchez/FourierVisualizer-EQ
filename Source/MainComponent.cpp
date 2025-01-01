@@ -558,7 +558,7 @@ void MainComponent::paint (juce::Graphics& g)
             float normalizedMagnitude = normalizeMagnitude(magnitudes[i], BUFFERSIZE / 2);
             
             // Scale frequency logarithmically for better visualization
-            float logFreq = frequency;
+            float logFreq = (isLogEnabled) ? std::log10(frequency) : frequency;
             float logMaxFreq = maxFreq;
             float logMinFreq = minFreq;
             
@@ -573,7 +573,7 @@ void MainComponent::paint (juce::Graphics& g)
             }
 
             float nextfrequency = (i + 1) * sampleRateVar/BUFFERSIZE;
-            float nextlogFreq =(nextfrequency);
+            float nextlogFreq = (isLogEnabled) ? std::log10(nextfrequency) : nextfrequency;
             
             // Normalize position to the visible frequency range
             float nextnormalizedPos = (nextlogFreq - logMinFreq) / (logMaxFreq - logMinFreq);
