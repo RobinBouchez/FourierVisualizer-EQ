@@ -247,6 +247,14 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     realtimeButton.setButtonText ((isRealtime) ? "realtime enabled" : "realtime disabled");
     realtimeButton.setColour (juce::TextButton::buttonColourId, juce::Colours::green);
     
+    addAndMakeVisible(&logButton);
+    logButton.onClick = [this] {
+        isLogEnabled = !isLogEnabled;
+        logButton.setButtonText ((isLogEnabled) ? "Log enabled" : "Log disabled");
+    };
+    logButton.setButtonText ((isRealtime) ? "Log enabled" : "Log disabled");
+    logButton.setColour (juce::TextButton::buttonColourId, juce::Colours::green);
+    
     
     addAndMakeVisible (lowPassFreqSlider);
     lowPassFreqSlider.setRange (minimumFrequency, maximumFrequency);
@@ -380,6 +388,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     highPassFilterSlider.setSliderStyle(juce::Slider::LinearVertical   );
     highPassFilterSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, highPassFilterSlider.getTextBoxHeight());
     highPassFilterSlider.setValue(0);
+    
+    
     
     formatManager.registerBasicFormats();
     transportSource.addChangeListener (this);
@@ -559,8 +569,8 @@ void MainComponent::paint (juce::Graphics& g)
             
             // Scale frequency logarithmically for better visualization
             float logFreq = (isLogEnabled) ? std::log10(frequency) : frequency;
-            float logMaxFreq = maxFreq;
-            float logMinFreq = minFreq;
+            float logMaxFreq = (isLogEnabled) ? std::log10(maxFreq) : maxFreq;
+            float logMinFreq = (isLogEnabled) ? std::log10(minFreq) : minFreq;
             
             // Normalize position to the visible frequency range
             float normalizedPos = (logFreq - logMinFreq) / (logMaxFreq - logMinFreq);
@@ -662,7 +672,8 @@ void MainComponent::paint (juce::Graphics& g)
                 filterPath10.addLineSegment(createFilterLine(spectraBounds,
                                                              xPos, nextxPos,
                                                              filterSlider10.getValue(),
-                                                             frequencySlider10.getValue(), frequencySlider10.getValue(),
+                                                             (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2,
+                                                             (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2,
                                                              frequency, nextfrequency,
                                                              frequencySlider10.getValue()), 1);
             }
@@ -713,6 +724,7 @@ void MainComponent::resized()
     auto sliderY = getHeight() - 320;
     
     realtimeButton.setBounds(getWidth() - windowBorder_x - 150, getHeight() - buttonHeight - windowBorder_y, 150, buttonHeight);
+    logButton.setBounds(getWidth() - windowBorder_x - 350, getHeight() - buttonHeight - windowBorder_y, 150, buttonHeight);
     
     lowPassButton.setBounds(sliderLeft, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
     filterButton3.setBounds(sliderLeft + sliderOffset, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
