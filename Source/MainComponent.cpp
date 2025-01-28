@@ -100,21 +100,6 @@ public:
     }
 };
 
-double rectangleFunction(double gain, double freq, double cutoffFreq, double offset) {
-    return gain / (1 + std::pow((freq - offset) / cutoffFreq, 16));
-}
-
-double scaleValue(double value, double oldMin, double oldMax, double newMin, double newMax) {
-    if (oldMin == oldMax) {
-        throw std::invalid_argument("oldMin and oldMax must be different to avoid division by zero.");
-    }
-
-    // Normalize the value to a [0, 1] range within the oldMin-oldMax range
-    double normalized = (value - oldMin) / (oldMax - oldMin);
-
-    // Scale the normalized value to the newMin-newMax range
-    return newMin + normalized * (newMax - newMin);
-}
 
 //==============================================================================
 MainComponent::MainComponent()
@@ -159,10 +144,12 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     stopButton.setColour (juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setEnabled (false);
     
+    
     addAndMakeVisible(&lowPassButton);
     lowPassButton.onClick = [this] {
         isLowPassEnabled = !isLowPassEnabled;
         lowPassButton.setButtonText ((isLowPassEnabled) ? "enabled" : "disabled");
+        (isLowPassEnabled) ? lowPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::orange) : lowPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     lowPassButton.setButtonText ((isLowPassEnabled) ? "enabled" : "disabled");
     lowPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -171,6 +158,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     highPassButton.onClick = [this] {
         isHighPassEnabled = !isHighPassEnabled;
         highPassButton.setButtonText ((isHighPassEnabled) ? "enabled" : "disabled");
+        (isHighPassEnabled) ? highPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::purple) : highPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     highPassButton.setButtonText ((isHighPassEnabled) ? "enabled" : "disabled");
     highPassButton.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -179,6 +167,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton3.onClick = [this] {
         isFilter3Enabled = !isFilter3Enabled;
         filterButton3.setButtonText ((isFilter3Enabled) ? "enabled" : "disabled");
+        (isFilter3Enabled) ? filterButton3.setColour (juce::TextButton::buttonColourId, juce::Colours::red) : filterButton3.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton3.setButtonText ((isFilter3Enabled) ? "enabled" : "disabled");
     filterButton3.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -187,6 +176,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton4.onClick = [this] {
         isFilter4Enabled = !isFilter4Enabled;
         filterButton4.setButtonText ((isFilter4Enabled) ? "enabled" : "disabled");
+        (isFilter4Enabled) ? filterButton4.setColour (juce::TextButton::buttonColourId, juce::Colours::blue) : filterButton4.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton4.setButtonText ((isFilter4Enabled) ? "enabled" : "disabled");
     filterButton4.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -195,6 +185,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton5.onClick = [this] {
         isFilter5Enabled = !isFilter5Enabled;
         filterButton5.setButtonText ((isFilter5Enabled) ? "enabled" : "disabled");
+        (isFilter5Enabled) ? filterButton5.setColour (juce::TextButton::buttonColourId, juce::Colours::green) : filterButton5.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton5.setButtonText ((isFilter5Enabled) ? "enabled" : "disabled");
     filterButton5.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -203,6 +194,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton6.onClick = [this] {
         isFilter6Enabled = !isFilter6Enabled;
         filterButton6.setButtonText ((isFilter6Enabled) ? "enabled" : "disabled");
+        (isFilter6Enabled) ? filterButton6.setColour (juce::TextButton::buttonColourId, juce::Colours::yellow) : filterButton6.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton6.setButtonText ((isFilter6Enabled) ? "enabled" : "disabled");
     filterButton6.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -211,6 +203,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton7.onClick = [this] {
         isFilter7Enabled = !isFilter7Enabled;
         filterButton7.setButtonText ((isFilter7Enabled) ? "enabled" : "disabled");
+        (isFilter7Enabled) ? filterButton7.setColour (juce::TextButton::buttonColourId, juce::Colours::grey) : filterButton7.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton7.setButtonText ((isFilter7Enabled) ? "enabled" : "disabled");
     filterButton7.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -219,6 +212,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton8.onClick = [this] {
         isFilter8Enabled = !isFilter8Enabled;
         filterButton8.setButtonText ((isFilter8Enabled) ? "enabled" : "disabled");
+        (isFilter8Enabled) ? filterButton8.setColour (juce::TextButton::buttonColourId, juce::Colours::cyan) : filterButton8.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton8.setButtonText ((isFilter8Enabled) ? "enabled" : "disabled");
     filterButton8.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -227,6 +221,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton9.onClick = [this] {
         isFilter9Enabled = !isFilter9Enabled;
         filterButton9.setButtonText ((isFilter9Enabled) ? "enabled" : "disabled");
+        (isFilter9Enabled) ? filterButton9.setColour (juce::TextButton::buttonColourId, juce::Colours::blueviolet) : filterButton9.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton9.setButtonText ((isFilter9Enabled) ? "enabled" : "disabled");
     filterButton9.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -235,6 +230,7 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterButton10.onClick = [this] {
         isFilter10Enabled = !isFilter10Enabled;
         filterButton10.setButtonText ((isFilter10Enabled) ? "enabled" : "disabled");
+        (isFilter10Enabled) ? filterButton10.setColour (juce::TextButton::buttonColourId, juce::Colours::cyan) : filterButton10.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
     };
     filterButton10.setButtonText ((isFilter10Enabled) ? "enabled" : "disabled");
     filterButton10.setColour (juce::TextButton::buttonColourId, juce::Colours::grey);
@@ -252,9 +248,28 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
         isLogEnabled = !isLogEnabled;
         logButton.setButtonText ((isLogEnabled) ? "Log enabled" : "Log disabled");
     };
-    logButton.setButtonText ((isRealtime) ? "Log enabled" : "Log disabled");
+    logButton.setButtonText ((isLogEnabled) ? "Log enabled" : "Log disabled");
     logButton.setColour (juce::TextButton::buttonColourId, juce::Colours::green);
     
+    auto sliderLeft = windowBorder_x + labelOffset - 30;
+    auto sliderOffset = 5 + (getWidth() - labelOffset - windowBorder_x * 2) / 10 ;
+    auto sliderY = getHeight() - 320;
+    
+    for (int i = 0; i < 10; i++) {
+        bool& isenabled = isaccRedButtonEnabled[i];
+        auto& newTextButton = accRedButtons[i];
+        
+        newTextButton.setBounds(sliderLeft + 10 + (sliderOffset * i), sliderY + frequencySliderHeight + 40, 100, buttonHeight);
+        newTextButton.onClick = [&newTextButton, &isenabled] {
+            isenabled = !isenabled;
+            newTextButton.setButtonText((isenabled) ? "Accentuate" : "Reduce");
+        };
+        
+        newTextButton.setButtonText((isenabled) ? "Accentuate" : "Reduce");
+        newTextButton.setColour(juce::TextButton::buttonColourId, juce::Colours::grey);
+        
+        addAndMakeVisible(newTextButton);
+    }
     
     addAndMakeVisible (lowPassFreqSlider);
     lowPassFreqSlider.setRange (minimumFrequency, maximumFrequency);
@@ -278,7 +293,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     lowPassFilterSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, lowPassFilterSlider.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider3);
-    frequencySlider3.setRange (50, 500.0);
+    frequencySlider3.setRange (20, 180.0);
+    frequencySlider3.setValue(125);
     frequencySlider3.setTextValueSuffix (" Hz");
     frequencySlider3.setSliderStyle(juce::Slider::Rotary);
     frequencySlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider3.getTextBoxHeight());
@@ -290,7 +306,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider3.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider3.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider4);
-    frequencySlider4.setRange (100, 200.0);
+    frequencySlider4.setRange (200, 300.0);
+    frequencySlider4.setValue(250);
     frequencySlider4.setTextValueSuffix (" Hz");
     frequencySlider4.setSliderStyle(juce::Slider::Rotary);
     frequencySlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider4.getTextBoxHeight());
@@ -302,7 +319,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider4.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider4.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider5);
-    frequencySlider5.setRange (200, 500.0);
+    frequencySlider5.setRange (400, 600.0);
+    frequencySlider5.setValue(500);
     frequencySlider5.setTextValueSuffix (" Hz");
     frequencySlider5.setSliderStyle(juce::Slider::Rotary);
     frequencyLabel4.attachToComponent (&frequencySlider5, true);
@@ -315,7 +333,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider5.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider5.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider6);
-    frequencySlider6.setRange (500, 1000.0);
+    frequencySlider6.setRange (800, 1400.0);
+    frequencySlider6.setValue(1000);
     frequencySlider6.setTextValueSuffix (" Hz");
     frequencySlider6.setSliderStyle(juce::Slider::Rotary);
     frequencySlider6.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider6.getTextBoxHeight());
@@ -327,7 +346,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider6.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider6.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider7);
-    frequencySlider7.setRange (1000, 5000.0);
+    frequencySlider7.setRange (1500, 2500.0);
+    frequencySlider7.setValue(2000);
     frequencySlider7.setTextValueSuffix (" Hz");
     frequencySlider7.setSliderStyle(juce::Slider::Rotary);
     frequencySlider7.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider7.getTextBoxHeight());
@@ -339,7 +359,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider7.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider7.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider8);
-    frequencySlider8.setRange (5000, 10000.0);
+    frequencySlider8.setRange (3000, 5000.0);
+    frequencySlider8.setValue(4000);
     frequencySlider8.setTextValueSuffix (" Hz");
     frequencySlider8.setSliderStyle(juce::Slider::Rotary);
     frequencySlider8.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider8.getTextBoxHeight());
@@ -351,7 +372,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider8.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider8.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider9);
-    frequencySlider9.setRange (10000.0, 20000.0);
+    frequencySlider9.setRange (6000.0, 10000.0);
+    frequencySlider9.setValue(8000);
     frequencySlider9.setTextValueSuffix (" Hz");
     frequencySlider9.setSliderStyle(juce::Slider::Rotary);
     frequencySlider9.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider9.getTextBoxHeight());
@@ -363,7 +385,8 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     filterSlider9.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, filterSlider9.getTextBoxHeight());
     
     addAndMakeVisible (frequencySlider10);
-    frequencySlider10.setRange (10000.0, 20000.0);
+    frequencySlider10.setRange (12000.0, 20000.0);
+    frequencySlider10.setValue(16000);
     frequencySlider10.setTextValueSuffix (" Hz");
     frequencySlider10.setSliderStyle(juce::Slider::Rotary);
     frequencySlider10.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, frequencySlider10.getTextBoxHeight());
@@ -389,8 +412,6 @@ thumbnail (BUFFERSIZE, formatManager, thumbnailCache)
     highPassFilterSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 160, highPassFilterSlider.getTextBoxHeight());
     highPassFilterSlider.setValue(0);
     
-    
-    
     formatManager.registerBasicFormats();
     transportSource.addChangeListener (this);
     thumbnail.addChangeListener (this);
@@ -402,6 +423,11 @@ MainComponent::~MainComponent()
 {
     // This shuts down the audio device and clears the audio source.
     shutdownAudio();
+}
+
+double MainComponent::rectangleFunction(double gain, double freq, double cutoffFreq, double offset, double filterThreshhold) {
+    int resolution = 24;
+    return ((gain - filterThreshhold) / (1 + std::pow((freq - offset) / cutoffFreq, resolution))) + filterThreshhold;
 }
 
 //==============================================================================
@@ -422,6 +448,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 
         channelInfo = juce::AudioSourceChannelInfo(bufferToFill);
         transportSource.getNextAudioBlock(channelInfo);
+        
         
         if (sampleBufferSize >= BUFFERSIZE) {
             for (auto sample = 0; sample < sampleBufferSize; ++sample) {
@@ -444,26 +471,139 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
             if(isRealtime) {
             FFTProcessor fft(BUFFERSIZE);
             std::vector<std::complex<double>> spectrum = fft.computeForwardDFT(samples);
-            
-            
+                
+
+                double gainLinear = 1;
+                double rectResult = 1;
+                double rectResultSlider3 = 1;
+                double rectResultHighpass = 1;
+                double rectResultSlider4 = 1;
+                double rectResultSlider5 = 1;
+                double rectResultSlider6 = 1;
+                double rectResultSlider7 = 1;
+                double rectResultSlider8 = 1;
+                double rectResultSlider9 = 1;
+                double rectResultSlider10 = 1;
             
             for (int n = 0; n < BUFFERSIZE; ++n) {
                 float frequency = n * sampleRateVar/BUFFERSIZE;
-                double gainLinear = juce::jmap((float)lowPassFilterSlider.getValue(), minFilterGain, maxFilterGain, 0.f, 2.f);
-                double rectResult = rectangleFunction(gainLinear, frequency, lowPassFreqSlider.getValue() , 0);
-                gainLinear = juce::jmap((float)highPassFilterSlider.getValue(), minFilterGain, maxFilterGain, 0.f, 2.f);
-                double rectResultHighpass = rectangleFunction(gainLinear, highPassFreqSlider.getValue(), frequency, 0);
-                magnitudes[n] = std::sqrt(std::pow(spectrum[n].real(), 2) + std::pow(spectrum[n].imag(), 2)) * rectResult * rectResultHighpass;
+                float minGain = 0.f;
+                float maxGain = 2.f;
+                float logMin = 0.001f;
+                float logMax = 2.f;
+                if(isLowPassEnabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)lowPassFilterSlider.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResult = rectangleFunction(gainLinear, frequency, lowPassFreqSlider.getValue(), 0, (isaccRedButtonEnabled[0]) ? 1 : 0);
+                }
+                if(isHighPassEnabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)highPassFilterSlider.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultHighpass = rectangleFunction(gainLinear, highPassFreqSlider.getValue(),frequency,  0, (isaccRedButtonEnabled[9]) ? 1 : 0);
+                }
+                
+
+                if(isFilter3Enabled) {
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider3.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider3 = rectangleFunction(gainLinear, frequency, (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2, frequencySlider3.getValue(), (isaccRedButtonEnabled[1]) ? 1 : 0);
+                }
+                
+                if(isFilter4Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider4.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider4 = rectangleFunction(gainLinear, frequency, (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2, frequencySlider4.getValue(), (isaccRedButtonEnabled[2]) ? 1 : 0);
+                }
+                
+                if(isFilter5Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider5.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider5 = rectangleFunction(gainLinear, frequency, (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2, frequencySlider5.getValue(), (isaccRedButtonEnabled[3]) ? 1 : 0);
+                }
+                
+                if(isFilter6Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider6.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider6 = rectangleFunction(gainLinear, frequency, (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2, frequencySlider6.getValue(), (isaccRedButtonEnabled[4]) ? 1 : 0);
+                }
+                
+                if(isFilter7Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider7.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider7 = rectangleFunction(gainLinear, frequency, (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2, frequencySlider7.getValue(), (isaccRedButtonEnabled[5]) ? 1 : 0);
+                }
+                
+                if(isFilter8Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider8.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider8 = rectangleFunction(gainLinear, frequency, (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2, frequencySlider8.getValue(), (isaccRedButtonEnabled[6]) ? 1 : 0);
+                }
+                
+                if(isFilter9Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider9.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider9 = rectangleFunction(gainLinear, frequency, (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2, frequencySlider9.getValue(), (isaccRedButtonEnabled[7]) ? 1 : 0);
+                }
+                
+                if(isFilter10Enabled){
+                    gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider10.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                    rectResultSlider10 = rectangleFunction(gainLinear, frequency, (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2, frequencySlider10.getValue(), (isaccRedButtonEnabled[8]) ? 1 : 0);
+                }
+                
+                spectrum[n] *= rectResult * rectResultHighpass * rectResultSlider3 * rectResultSlider4 * rectResultSlider5 * rectResultSlider6 * rectResultSlider7 * rectResultSlider8 * rectResultSlider9 * rectResultSlider10;
             }
-            
-            for (int i = 0; i < BUFFERSIZE; ++i) {
-                float frequency = i * sampleRateVar/BUFFERSIZE;
-                double gainLinear = juce::jmap((float)lowPassFilterSlider.getValue(), minFilterGain, maxFilterGain, 0.f, 2.f);
-                double rectResult = rectangleFunction(gainLinear, frequency, lowPassFreqSlider.getValue(), 0);
-                gainLinear = juce::jmap((float)highPassFilterSlider.getValue(), minFilterGain, maxFilterGain, 0.f, 2.f);
-                double rectResultHighpass = rectangleFunction(gainLinear, highPassFreqSlider.getValue(), frequency, 0);
-                spectrum[i] *= rectResult * rectResultHighpass;
-            }
+                
+                for (int n = 0; n < BUFFERSIZE; ++n) {
+                    float frequency = n * sampleRateVar/BUFFERSIZE;
+                    float minGain = 0.f;
+                    float maxGain = 2.f;
+                    float logMin = 0.001f;
+                    float logMax = 2.f;
+                    
+                    if(isLowPassEnabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)lowPassFilterSlider.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResult = rectangleFunction(gainLinear, frequency, lowPassFreqSlider.getValue(), 0, (isaccRedButtonEnabled[0]) ? 1 : 0);
+                    }
+                    if(isHighPassEnabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)highPassFilterSlider.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultHighpass = rectangleFunction(gainLinear, highPassFreqSlider.getValue(),frequency,  0, (isaccRedButtonEnabled[9]) ? 1 : 0);
+                    }
+                    
+
+                    if(isFilter3Enabled) {
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider3.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider3 = rectangleFunction(gainLinear, frequency, (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2, frequencySlider3.getValue(), (isaccRedButtonEnabled[1]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter4Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider4.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider4 = rectangleFunction(gainLinear, frequency, (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2, frequencySlider4.getValue(), (isaccRedButtonEnabled[2]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter5Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider5.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider5 = rectangleFunction(gainLinear, frequency, (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2, frequencySlider5.getValue(), (isaccRedButtonEnabled[3]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter6Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider6.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider6 = rectangleFunction(gainLinear, frequency, (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2, frequencySlider6.getValue(), (isaccRedButtonEnabled[4]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter7Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider7.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider7 = rectangleFunction(gainLinear, frequency, (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2, frequencySlider7.getValue(), (isaccRedButtonEnabled[5]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter8Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider8.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider8 = rectangleFunction(gainLinear, frequency, (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2, frequencySlider8.getValue(), (isaccRedButtonEnabled[6]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter9Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider9.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider9 = rectangleFunction(gainLinear, frequency, (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2, frequencySlider9.getValue(), (isaccRedButtonEnabled[7]) ? 1 : 0);
+                    }
+                    
+                    if(isFilter10Enabled){
+                        gainLinear =  juce::mapToLog10(juce::jmap((float)filterSlider10.getValue(), minFilterGain, 0.f, minGain, 1.f), logMin, logMax);
+                        rectResultSlider10 = rectangleFunction(gainLinear, frequency, (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2, frequencySlider10.getValue(), (isaccRedButtonEnabled[8]) ? 1 : 0);
+                    }
+                    
+                    
+                    magnitudes[n] = std::sqrt(std::pow(spectrum[n].real(), 2) + std::pow(spectrum[n].imag(), 2)) * rectResult * rectResultHighpass * rectResultSlider3 * rectResultSlider4 * rectResultSlider5 * rectResultSlider6 * rectResultSlider7 * rectResultSlider8 * rectResultSlider9 * rectResultSlider10;
+                }
             
             // Inverse transform
             auto reconstructed = fft.computeInverseDFT(spectrum);
@@ -491,28 +631,34 @@ void MainComponent::releaseResources() {
 }
 
 
-// Helper function to scale magnitudes to 0-1 range
 float normalizeMagnitude(float magnitude, float maxPossibleMagnitude) {
     // Apply scaling and optional dB conversion
     float scaledMag = magnitude / maxPossibleMagnitude;
     
     // Optional: Convert to dB scale (common for spectrum analyzers)
-    float dbMag = 20 * std::log10(scaledMag + 1e-6f); // Add small value to avoid log(0)
-    
+    float dbMag = 20 * std::log10(magnitude + 1e-12f); // Add small value to avoid log(0)
+//    juce::Decibels::gainToDecibels(juce::jmap(magnitude, 0.f, maxPossibleMagnitude, 0.f, 1.f));
     // Map dB range (-100dB to 0dB) to 0-1
-    float normalizedDb = juce::jmap(dbMag, -100.f, 0.f, -18.f, 18.f);
+    float normalizedDb = juce::jmap(dbMag, -96.f, 0.f, 0.f, 1.f);
+//    float normalizedDb = juce::jmap(magnitude, 0.f, maxPossibleMagnitude, 0.f, 1.f);
+//    float normalizedDb = juce::jmap(/*magnitude*/, 0.f, maxPossibleMagnitude, 0.f, 1.f);
     return normalizedDb;
 }
 
-juce::Line<float> MainComponent::createFilterLine(juce::Rectangle<int> bounds, float pos, float nextPos, float gain, float cutOffFreq, float nextCutOffFreq, float freq, float nextFreq, float offset) {
+juce::Line<float> MainComponent::createFilterLine(juce::Rectangle<int> bounds, float pos, float nextPos, float gain, float cutOffFreq, float nextCutOffFreq, float freq, float nextFreq, float offset, float threshold) {
     juce::Line<float> line;
+    float minGain = (threshold != 0) ? 0 : 0.f;
+    float maxGain = (threshold != 0) ? 2 : 2.f;
     
-    double rectResult1 = rectangleFunction(juce::jmap(gain, minFilterGain, maxFilterGain, 0.f, 2.f), freq, cutOffFreq, offset);
-    double rectResult2 = rectangleFunction(juce::jmap(gain, minFilterGain, maxFilterGain, 0.f, 2.f), nextFreq, nextCutOffFreq, offset);
+    double rectResult1 = rectangleFunction(juce::jmap(gain, minFilterGain, maxFilterGain, minGain, maxGain), freq, cutOffFreq, offset, threshold);
+    double rectResult2 = rectangleFunction(juce::jmap(gain, minFilterGain, maxFilterGain, minGain, maxGain), nextFreq, nextCutOffFreq, offset, threshold);
     
-    line.setStart(pos, bounds.getY() + bounds.getHeight() - juce::jmap((float)rectResult1, 0.f, 2.f, 0.f, (float)bounds.getHeight()));
-    line.setEnd(nextPos, bounds.getY() + bounds.getHeight() - juce::jmap((float)rectResult2, 0.f, 2.f, 0.f, (float)bounds.getHeight()));
-    
+    if(rectResult1 < minGain) rectResult1 = minGain;
+    if(rectResult1 > maxGain) rectResult1 = maxGain;
+    line.setStart(pos, bounds.getY() + bounds.getHeight() - juce::jmap((float)rectResult1, minGain, maxGain, 0.f, (float)bounds.getHeight()));
+    if(rectResult2 < minGain) rectResult2 = minGain;
+    if(rectResult2 > maxGain) rectResult2 = maxGain;
+    line.setEnd(nextPos, bounds.getY() + bounds.getHeight() - juce::jmap((float)rectResult2, minGain, maxGain, 0.f, (float)bounds.getHeight()));
     return line;
 }
 
@@ -529,10 +675,10 @@ void MainComponent::paint (juce::Graphics& g)
             else
                 paintIfFileLoaded (g, thumbnailBounds);
     
-    juce::Rectangle<int> spectraBounds(windowBorder_x, windowBorder_y, getWidth() - windowBorder_x * 2, 300);
+    juce::Rectangle<int> spectraBounds(windowBorder_x + 20, windowBorder_y, getWidth() - 10 - windowBorder_x * 2, 300);
     
     g.setColour (juce::Colours::grey);
-    g.drawLine(spectraBounds.getX(), spectraBounds.getY() + spectraBounds.getHeight(), spectraBounds.getX() + spectraBounds.getWidth(), spectraBounds.getY() + spectraBounds.getHeight(), 1);
+    g.drawLine(spectraBounds.getX(), spectraBounds.getY() + spectraBounds.getHeight(), spectraBounds.getX() + spectraBounds.getWidth(), spectraBounds.getBottom(), 1);
     g.drawLine(spectraBounds.getX(), spectraBounds.getY(), spectraBounds.getX(), spectraBounds.getY() + spectraBounds.getHeight(), 1);
     
     
@@ -550,11 +696,12 @@ void MainComponent::paint (juce::Graphics& g)
         
         float maxFreq = std::min(maximumFrequency, sampleRateVar / 2.0f);
         float minFreq = minimumFrequency;
+        g.setColour (juce::Colours::white);
         
-        static const float labelDBs[] = {18, 12, 6, 0, -6, -12, -18};
+        const float labelDBs[] = {12, 9, 6, 3, 0, -3, -6, -9, -12};
             for (float labelDB: labelDBs) {
                 juce::String label = juce::String(labelDB) + "dB";
-                g.drawText(label, spectraBounds.getX() - 40, spectraBounds.getBottom() - 20  - (spectraBounds.getHeight() / 2)  + ((labelDB / -6) * spectraBounds.getHeight() / 6), 40, 20, juce::Justification::centred);
+                g.drawText(label, spectraBounds.getX() - 46, spectraBounds.getBottom() - spectraBounds.getHeight() /2 - 12 * labelDB - 10, 40, 20, juce::Justification::centredRight);
             }
         
         for (int i = 0; i < BUFFERSIZE; ++i) {
@@ -575,7 +722,7 @@ void MainComponent::paint (juce::Graphics& g)
             // Normalize position to the visible frequency range
             float normalizedPos = (logFreq - logMinFreq) / (logMaxFreq - logMinFreq);
             float xPos = spectraBounds.getX() + normalizedPos * (getWidth() - 2 * spectraBounds.getX());
-            float yPos = spectraBounds.getBottom() - juce::jmap(normalizedMagnitude, minFilterGain, maxFilterGain, 0.f, (float)(spectraBounds.getHeight()));//(normalizedMagnitude * spectraBounds.getHeight() /2);
+            float yPos = spectraBounds.getBottom() - juce::jmap(juce::Decibels::gainToDecibels(normalizedMagnitude),  minFilterGain, maxFilterGain, 0.f, (float)(spectraBounds.getHeight()));//(normalizedMagnitude * spectraBounds.getHeight() /2);
 
             g.setColour(juce::Colours::white);
             if (yPos < spectraBounds.getBottom()) {
@@ -595,7 +742,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             lowPassFilterSlider.getValue(),
                                                             lowPassFreqSlider.getValue(), lowPassFreqSlider.getValue(),
                                                             frequency, nextfrequency,
-                                                            0), 1);
+                                                            0, (isaccRedButtonEnabled[0]) ? 1 : 0), 1);
             }
             if(isHighPassEnabled) {
                 filterPath2.addLineSegment(createFilterLine(spectraBounds,
@@ -603,7 +750,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             highPassFilterSlider.getValue(),
                                                             frequency, nextfrequency,
                                                             highPassFreqSlider.getValue(), highPassFreqSlider.getValue(),
-                                                            0), 1);
+                                                            0, (isaccRedButtonEnabled[9]) ? 1 : 0), 1);
             }
             if(isFilter3Enabled){
                 filterPath3.addLineSegment(createFilterLine(spectraBounds,
@@ -612,7 +759,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2,
                                                             (frequencySlider3.getMaximum() - frequencySlider3.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider3.getValue()), 1);
+                                                            frequencySlider3.getValue(),(isaccRedButtonEnabled[1]) ? 1 : 0), 1);
             }
             if(isFilter4Enabled){
                 filterPath4.addLineSegment(createFilterLine(spectraBounds,
@@ -621,7 +768,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2,
                                                             (frequencySlider4.getMaximum() - frequencySlider4.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider4.getValue()), 1);
+                                                            frequencySlider4.getValue(), (isaccRedButtonEnabled[2]) ? 1 : 0), 1);
             }
             if(isFilter5Enabled) {
                 filterPath5.addLineSegment(createFilterLine(spectraBounds,
@@ -630,7 +777,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2,
                                                             (frequencySlider5.getMaximum() - frequencySlider5.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider5.getValue()), 1);
+                                                            frequencySlider5.getValue(), (isaccRedButtonEnabled[3]) ? 1 : 0), 1);
             }
             if(isFilter6Enabled) {
                 filterPath6.addLineSegment(createFilterLine(spectraBounds,
@@ -639,7 +786,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2,
                                                             (frequencySlider6.getMaximum() - frequencySlider6.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider6.getValue()), 1);
+                                                            frequencySlider6.getValue(), (isaccRedButtonEnabled[4]) ? 1 : 0), 1);
             }
             if(isFilter7Enabled) {
                             filterPath7.addLineSegment(createFilterLine(spectraBounds,
@@ -648,7 +795,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                                         (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2,
                                                                         (frequencySlider7.getMaximum() - frequencySlider7.getMinimum()) / 2,
                                                                         frequency, nextfrequency,
-                                                                        frequencySlider7.getValue()), 1);
+                                                                        frequencySlider7.getValue(), (isaccRedButtonEnabled[5]) ? 1 : 0), 1);
             }
             if(isFilter8Enabled) {
                 filterPath8.addLineSegment(createFilterLine(spectraBounds,
@@ -657,7 +804,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2,
                                                             (frequencySlider8.getMaximum() - frequencySlider8.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider8.getValue()), 1);
+                                                            frequencySlider8.getValue(), (isaccRedButtonEnabled[6]) ? 1 : 0), 1);
             }
             if(isFilter9Enabled) {
                 filterPath9.addLineSegment(createFilterLine(spectraBounds,
@@ -666,7 +813,7 @@ void MainComponent::paint (juce::Graphics& g)
                                                             (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2,
                                                             (frequencySlider9.getMaximum() - frequencySlider9.getMinimum()) / 2,
                                                             frequency, nextfrequency,
-                                                            frequencySlider9.getValue()), 1);
+                                                            frequencySlider9.getValue(), (isaccRedButtonEnabled[7]) ? 1 : 0), 1);
             }
             if(isFilter10Enabled) {
                 filterPath10.addLineSegment(createFilterLine(spectraBounds,
@@ -675,11 +822,10 @@ void MainComponent::paint (juce::Graphics& g)
                                                              (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2,
                                                              (frequencySlider10.getMaximum() - frequencySlider10.getMinimum()) / 2,
                                                              frequency, nextfrequency,
-                                                             frequencySlider10.getValue()), 1);
+                                                             frequencySlider10.getValue(), (isaccRedButtonEnabled[8]) ? 1 : 0), 1);
             }
 
-
-            // Draw frequency labels at logarithmically spaced intervals
+            g.setColour (juce::Colours::white);
             static const float labelFreqs[] = {20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000};
             for (float labelFreq : labelFreqs) {
                 if (std::abs(frequency - labelFreq) < (sampleRateVar/BUFFERSIZE/2)) {
@@ -719,23 +865,23 @@ void MainComponent::resized()
     playButton.setBounds(getWidth() / 2 - buttonWidth,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
     stopButton.setBounds(getWidth() / 2 + buttonWidth / 2,getHeight() - buttonHeight - windowBorder_y,buttonWidth, buttonHeight);
     
-    auto sliderLeft = windowBorder_x + labelOffset;
-    auto sliderOffset = (getWidth() - labelOffset - windowBorder_x * 2) / 10 ;
+    auto sliderLeft = windowBorder_x + labelOffset - 30;
+    auto sliderOffset = 5 + (getWidth() - labelOffset - windowBorder_x * 2) / 10 ;
     auto sliderY = getHeight() - 320;
     
     realtimeButton.setBounds(getWidth() - windowBorder_x - 150, getHeight() - buttonHeight - windowBorder_y, 150, buttonHeight);
     logButton.setBounds(getWidth() - windowBorder_x - 350, getHeight() - buttonHeight - windowBorder_y, 150, buttonHeight);
     
-    lowPassButton.setBounds(sliderLeft, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton3.setBounds(sliderLeft + sliderOffset, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton4.setBounds(sliderLeft + (sliderOffset * 2), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton5.setBounds(sliderLeft + (sliderOffset * 3), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton6.setBounds(sliderLeft + (sliderOffset * 4), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton7.setBounds(sliderLeft + (sliderOffset * 5), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton8.setBounds(sliderLeft + (sliderOffset * 6), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton9.setBounds(sliderLeft + (sliderOffset * 7), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    filterButton10.setBounds(sliderLeft + (sliderOffset * 8), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
-    highPassButton.setBounds(sliderLeft + (sliderOffset * 9), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    lowPassButton.setBounds(sliderLeft + 10, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton3.setBounds(sliderLeft + 10 + sliderOffset, sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton4.setBounds(sliderLeft + 10 + (sliderOffset * 2), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton5.setBounds(sliderLeft + 10 + (sliderOffset * 3), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton6.setBounds(sliderLeft + 10 + (sliderOffset * 4), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton7.setBounds(sliderLeft + 10 + (sliderOffset * 5), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton8.setBounds(sliderLeft + 10 + (sliderOffset * 6), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton9.setBounds(sliderLeft + 10 + (sliderOffset * 7), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    filterButton10.setBounds(sliderLeft + 10 + (sliderOffset * 8), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
+    highPassButton.setBounds(sliderLeft + 10 + (sliderOffset * 9), sliderY + frequencySliderHeight + 10, 100, buttonHeight);
     
     lowPassFilterSlider.setBounds  (sliderLeft,                      sliderY - 210, filterSliderWidth, filterSliderHeight);
     filterSlider3.setBounds        (sliderLeft + sliderOffset,       sliderY - 210, filterSliderWidth, filterSliderHeight);
@@ -758,6 +904,7 @@ void MainComponent::resized()
     frequencySlider9.setBounds   (sliderLeft + (sliderOffset * 7), sliderY, frequencySliderWidth, frequencySliderHeight);
     frequencySlider10.setBounds   (sliderLeft + (sliderOffset * 8), sliderY, frequencySliderWidth, frequencySliderHeight);
     highPassFreqSlider.setBounds (sliderLeft + (sliderOffset * 9), sliderY, frequencySliderWidth, frequencySliderHeight);
+    
 }
 
 void MainComponent::readFile(juce::File file) {

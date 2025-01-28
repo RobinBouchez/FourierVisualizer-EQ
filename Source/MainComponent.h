@@ -45,7 +45,7 @@ private:
     void thumbnailChanged();
     void paintIfNoFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
     void paintIfFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
-    juce::Line<float> createFilterLine(juce::Rectangle<int> bounds, float pos, float nextPos, float gain, float cutOffFreq, float nextCutOffFreq, float freq, float nextFreq, float offset);
+    juce::Line<float> createFilterLine(juce::Rectangle<int>, float, float, float, float, float, float, float, float, float);
     
     void readFile(juce::File file);
     
@@ -96,9 +96,11 @@ private:
     juce::TextButton filterButton10;
     bool isFilter10Enabled = false;
     
+    juce::TextButton accRedButtons[10]; 
+    bool isaccRedButtonEnabled[10];
+    
     juce::TextButton realtimeButton;
     bool isRealtime = true;
-    
     
     juce::Slider lowPassFreqSlider;
     juce::Label  lowPassFreqLabel;
@@ -163,7 +165,7 @@ private:
     const float filterSliderHeight = 200;
     
     const float thumbnailWidth = 150;
-    const float thumbnailHeight = 130;
+    const float thumbnailHeight = 85;
     
     const float buttonWidth = 100;
     const float buttonHeight = 25;
@@ -173,13 +175,13 @@ private:
     const float minimumFrequency = 20;
     const float maximumFrequency = 20000;
     
-    const float minFilterGain = -18.f;
-    const float maxFilterGain = 18.f;
+    const float minFilterGain = -12.f;
+    const float maxFilterGain = 12.f;
     
     const int leftChannel = 0;
     const int rightChannel = 1;
     
-    
+    double rectangleFunction(double gain, double freq, double cutoffFreq, double offset, double filterThreshhold);
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
